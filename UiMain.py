@@ -14,11 +14,15 @@ class Sender:
 
 
 class MyWidget(QMainWindow):
-    def __init__(self, users_names, number_of_users, dialogs):
+    def __init__(self, users_handles, users_names, number_of_users, dialogs):
         super().__init__()
 
         self.number_of_users = number_of_users
-        self.users = [*users_names]  # Имена обязательно уникальные!
+        self.names_of_users = dict()
+        for i in range(len(users_handles)):
+            self.names_of_users[users_handles[i]] = users_names[i]
+        self.handles_of_users = [*users_handles]
+        self.users_btn = dict()
         self.users_showed = 0
         self.user_now = None
         self.dialogs = dialogs
@@ -29,6 +33,7 @@ class MyWidget(QMainWindow):
         uic.loadUi('C:/Program Files (x86)/Messenger/main_window.ui', self)
         self.message_send_button.clicked.connect(self.send_message)
         self.message_vbar = self.messangesScrollArea.verticalScrollBar()
+        self.senders_vbar = self.sendersScrollArea.verticalScrollBar()
         self.start()
         self.restyle(0)
 
@@ -49,6 +54,12 @@ class MyWidget(QMainWindow):
         if event.key() == Qt.Key_Enter:
             self.send_message()
 
+    def clear_users(self):
+        while self.senders.count():
+            child = self.senders.takeAt(0)
+            if child.widget():
+                child.widget().deleteLater()
+
     def clear_messages(self):
         while self.messages.count():
             child = self.messages.takeAt(0)
@@ -58,11 +69,22 @@ class MyWidget(QMainWindow):
     def scroll_message_bar(self, n):
         for _ in range(n):
             QApplication.processEvents()
-        self.message_vbar.setValue(self.message_vbar.maximum())
+        self.message_vbar.setSliderPosition(self.message_vbar.maximum())
+        # self.message_vbar.setValue(self.message_vbar.maximum())
+        # self.message_vbar.setSliderDown(True)
+
+    def scroll_senders_bar(self):
+        QApplication.processEvents()
+        self.senders_vbar.setSliderPosition(0)
 
     def generate_message(self, sender='Вы'):
         text = ''.join([choice('qwertyuiopasdfghjklzxcvbnm') for _ in range(10)])
         return Message(text, sender)
+
+    def generate_dialog(self, user):
+        if user not in self.dialogs:
+            self.dialogs[user] = [self.generate_message(
+                sender=choice(['Вы', self.names_of_users[user]])) for _ in range(10)]
 
     def send_message(self):
         if not self.user_now:
@@ -75,6 +97,7 @@ class MyWidget(QMainWindow):
             self.dialogs[self.user_now] = [message]
 
         save_dialog(self.user_now, self.dialogs[self.user_now])
+        self.sort_users()
 
     def add_message(self, text):
         if text.sender == 'Вы':
@@ -90,39 +113,45 @@ class MyWidget(QMainWindow):
         self.scroll_message_bar(2)
 
     def show_new_user(self, user):
-        btn = QPushButton(user)
+        btn = QPushButton(self.names_of_users[user])
         btn.clicked.connect(self.open_new_dialog)
 
         btn.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
-        btn.setMinimumHeight(100)
+        btn.setMinimumHeight(150)
         btn.setStyleSheet('background-color: #BED6FF; font-size: 35px')
         # self.senders.addWidget(btn, self.users_showed, 0, alignment=Qt.AlignVCenter)
         self.senders.addWidget(btn)
+        self.users_btn[btn] = user
+
         self.users_showed += 1
 
-        if user not in self.dialogs:
-            self.dialogs[user] = \
-                [self.generate_message(sender=choice(['Вы', user])) for _ in range(100)]
+        self.generate_dialog(user)
 
     def open_new_dialog(self):
         self.clear_messages()
-        sender = self.sender().text()
+        sender = self.users_btn[self.sender()]
         self.user_now = sender
         for message in self.dialogs[sender]:
             self.add_message(message)
 
-        self.scroll_message_bar(1)
+        self.scroll_message_bar(0)
 
         save_dialog(sender, self.dialogs[sender])
 
+    def sort_users(self):
+        self.clear_users()
+        self.handles_of_users.sort(key=lambda l: -self.dialogs[l][-1].int_time)
+        self.start()
+        self.scroll_senders_bar()
+
     def start(self):
         for i in range(self.number_of_users):
-            self.show_new_user(self.users[i])
+            self.show_new_user(self.handles_of_users[i])
 
 
-def main(users_names, number_of_users, dialogs):
+def main(users_handles, users_names, number_of_users, dialogs):
     app = QApplication(sys.argv)
-    ex = MyWidget(users_names, number_of_users, dialogs)
+    ex = MyWidget(users_handles, users_names, number_of_users, dialogs)
     ex.show()
     sys.exit(app.exec_())
 
