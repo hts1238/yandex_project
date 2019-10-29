@@ -1,4 +1,4 @@
-def registration_request(email='123@yandex.ru', name='Vladimir', handle='stbru7b5qbv', password='user'):
+def registration_request(email, name, handle, password):
     import requests
     import json
 
@@ -7,7 +7,6 @@ def registration_request(email='123@yandex.ru', name='Vladimir', handle='stbru7b
 
     answer = json.loads(response.text)
 
-    print(type(answer))
     print(answer)
 
     return answer

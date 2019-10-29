@@ -23,11 +23,16 @@ class LoginWindow(QDialog):
         password = self.password_text.text()
         answer = login_request(handle, password)
         if 'Error' not in answer:
-            self.token = answer['token']
-            print(self.token)
+            self.save(handle, password, answer['token'])
             self.close()
 
     def registration(self):
         self.registration_window = RegistrationWindow()
         self.registration_window.setWindowModality(Qt.ApplicationModal)
         self.registration_window.show()
+
+    def save(self, handle, password, token):
+        with open('C:/Program Files (x86)/Messenger/data', 'w') as file:
+            file.write(handle + '\n')
+            file.write(password + '\n')
+            file.write(token)

@@ -7,7 +7,6 @@ def login_request(handle='stbru7b5qbv', password='user'):
 
     answer = json.loads(response.text)
 
-    print(type(answer))
     print(answer)
 
     return answer

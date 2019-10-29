@@ -1,4 +1,4 @@
-def send_message(handle, to_handle, token):
+def get_messages_server(handle, to_handle, token):
     import requests
     import json
 
@@ -10,11 +10,9 @@ def send_message(handle, to_handle, token):
 
     answer = json.loads(response.text)
 
-    print(type(answer))
     print(answer)
 
 
-send_message(1, 2, 3)
 """
 from_id, to_id, text, time
 """

@@ -1,4 +1,5 @@
 from registration_request import registration_request
+from send_email import send_email
 
 from PyQt5.QtCore import Qt
 from PyQt5 import uic
@@ -22,12 +23,9 @@ class RegistrationWindow(QDialog):
         handle = self.handle_text.text()
         password = self.password_text.text()
         answer = registration_request(email, name, handle, password)
+
         if 'Error' not in answer:
+            send_email(name, handle, password, email)
             self.token = answer['token']
             print(self.token)
             self.close()
-
-# app = QApplication(sys.argv)
-# ex = LoginWindow()
-# ex.show()
-# sys.exit(app.exec_())
