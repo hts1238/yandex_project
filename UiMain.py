@@ -1,5 +1,6 @@
 from Message import Message
 from save_dialog import save_dialog
+from LoginWindow import LoginWindow
 
 import sys
 from random import choice
@@ -34,8 +35,16 @@ class MyWidget(QMainWindow):
         self.message_send_button.clicked.connect(self.send_message)
         self.message_vbar = self.messangesScrollArea.verticalScrollBar()
         self.senders_vbar = self.sendersScrollArea.verticalScrollBar()
+
+        self.login()
+
         self.start()
         self.restyle(0)
+
+    def login(self):
+        self.login_window = LoginWindow()
+        self.login_window.setWindowModality(Qt.ApplicationModal)
+        self.login_window.show()
 
     def restyle(self, style):
         # self.setStyleSheet('''
