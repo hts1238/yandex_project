@@ -8,23 +8,25 @@ header('Content-Type: application/json');
 
 include_once("functions.php");
 
-function get_messages(&$query_answer) {
-    if (!isset($_POST["handle"]) || !isset($_POST["token"]) || !isset($_POST["to_handle"])) {
+function send_message(&$query_answer) {
+    if (!isset($_POST["from_handle"]) || !isset($_POST["token"]) || !isset($_POST["to_handle"]) || !isset($_POST["text"])) {
         $query_answer["Error"] = ["id" => 3, "title" => "There are not any require post-arguments"];
         return;
     }
 
-    $to_handle = $_POST["to_handle"];
-    $handle = $_POST["handle"];
+    $from_handle = $_POST["from_handle"];
     $token = $_POST["token"];
+    $to_handle = $_POST["to_handle"];
+    $text = $_POST["text"];
 
     $db = connect();
+
     if (!$db) {
         $query_answer["Error"] = "Couldn't connect to the database";
         return;
     }
 
-    $user_id = get_id_from_handle($db, $handle, $query_answer);
+    $user_id = get_id_from_handle($db, $from_handle, $query_answer);
     if (!$user_id) {
         return;
     }
@@ -38,10 +40,9 @@ function get_messages(&$query_answer) {
         return;
     }
 
-    $sql = "SELECT from_id, to_id, text, time ".
-        "FROM messages ".
-        "WHERE (from_id = '$user_id' AND to_id = '$to_id') ".
-        "OR (from_id = '$to_id' AND to_id = '$user_id')";
+    $sql = "INSERT ".
+        "INTO messages(from_id, to_id, text, time) ".
+        "VALUES($user_id, $to_id, '$text', ".time().")";
     $sql_result = mysqli_query($db, $sql);
 
     if (!$sql_result) {
@@ -51,11 +52,9 @@ function get_messages(&$query_answer) {
     }
 
     $query_answer["Good"] = "All good";
-    $query_answer["your_id"] = $user_id;
-    $query_answer["result"] = mysqli_fetch_all($sql_result);
 }
 
 $query_answer = [];
-get_messages($query_answer);
+send_message($query_answer);
 
 echo json_encode($query_answer);

@@ -17,6 +17,29 @@ function connect() {
     return $db;
 }
 
+function get_id_from_handle(&$db, &$handle, &$query_answer) {
+    $sql = "SELECT id ".
+        "FROM users ".
+        "WHERE handle = '$handle'";
+    $sql_result = mysqli_query($db, $sql);
+
+    if (!$sql_result) {
+        $query_answer["Error"] = "Database error";
+        $query_answer["Database error"] = mysqli_error($db);
+        return false;
+    }
+
+    $sql_result =  mysqli_fetch_assoc($sql_result);
+
+    if (!isset($sql_result["id"])) {
+        $query_answer["Error"] = "Incorrect handle!";
+        $query_answer["Dodo"] = $sql_result;
+        return false;
+    }
+
+    return $sql_result["id"];
+}
+
 function check_user(&$db, &$user_id, &$token, &$query_answer) {
     $sql = "SELECT token_time, user_id ".
         "FROM connects ".

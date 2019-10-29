@@ -56,7 +56,7 @@ function login(&$query_answer) {
 
     if (!$sql_result) {
         $query_answer["Error"] = "Can't insert new token into database";
-        return false;
+        return;
     }
 
     $query_answer["token"] = $new_token;
