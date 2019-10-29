@@ -1,5 +1,7 @@
 from Message import Message
+from Sender import Sender
 from save_dialog import save_dialog
+from send_message_server import send_message
 from LoginWindow import LoginWindow
 
 import sys
@@ -10,14 +12,12 @@ from PyQt5.QtWidgets import QPushButton, QScrollBar, QLabel
 from PyQt5.QtCore import Qt
 
 
-class Sender:
-    pass
-
-
 class MyWidget(QMainWindow):
-    def __init__(self, users_handles, users_names, number_of_users, dialogs):
+    def __init__(self, users_handles, users_names, number_of_users, login, password, token):
         super().__init__()
 
+        self.handle = login
+        self.token = token
         self.number_of_users = number_of_users
         self.names_of_users = dict()
         for i in range(len(users_handles)):
@@ -26,7 +26,7 @@ class MyWidget(QMainWindow):
         self.users_btn = dict()
         self.users_showed = 0
         self.user_now = None
-        self.dialogs = dialogs
+        self.dialogs = dict()
         self.messages_number = 0
         self.initUI()
 
@@ -35,7 +35,6 @@ class MyWidget(QMainWindow):
         self.message_send_button.clicked.connect(self.send_message)
         self.message_vbar = self.messangesScrollArea.verticalScrollBar()
         self.senders_vbar = self.sendersScrollArea.verticalScrollBar()
-
         self.login()
 
         self.start()
@@ -105,7 +104,8 @@ class MyWidget(QMainWindow):
         else:
             self.dialogs[self.user_now] = [message]
 
-        save_dialog(self.user_now, self.dialogs[self.user_now])
+        # save_dialog(self.user_now, self.dialogs[self.user_now])
+        send_message(self.handle, self.token, self.user_now, message.text)
         self.sort_users()
 
     def add_message(self, text):
@@ -158,9 +158,9 @@ class MyWidget(QMainWindow):
             self.show_new_user(self.handles_of_users[i])
 
 
-def main(users_handles, users_names, number_of_users, dialogs):
+def main(users_handles, users_names, number_of_users, login, password, token):
     app = QApplication(sys.argv)
-    ex = MyWidget(users_handles, users_names, number_of_users, dialogs)
+    ex = MyWidget(users_handles, users_names, number_of_users, login, password, token)
     ex.show()
     sys.exit(app.exec_())
 
