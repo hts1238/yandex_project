@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import QLabel
-from time import asctime
+from time import asctime, time
 
 
 class Message:
@@ -7,6 +7,7 @@ class Message:
         self.sender = sender
         self.time = asctime()
         self.text = (text + '\n')
+        self.int_time = time()
 
     def text_to_show(self):
         text = f'{self.sender} ({self.time}):\n{self.text}'

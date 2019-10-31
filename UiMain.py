@@ -1,5 +1,6 @@
 from Message import Message
 from save_dialog import save_dialog
+from send_message_server import send_message_server
 
 import sys
 from random import choice
@@ -9,14 +10,12 @@ from PyQt5.QtWidgets import QPushButton, QScrollBar, QLabel
 from PyQt5.QtCore import Qt
 
 
-class Sender:
-    pass
-
-
 class MyWidget(QMainWindow):
-    def __init__(self, users_handles, users_names, number_of_users, dialogs):
+    def __init__(self, users_handles, users_names, number_of_users, handle, token):
         super().__init__()
 
+        self.handle = handle
+        self.token = token
         self.number_of_users = number_of_users
         self.names_of_users = dict()
         for i in range(len(users_handles)):
@@ -25,16 +24,18 @@ class MyWidget(QMainWindow):
         self.users_btn = dict()
         self.users_showed = 0
         self.user_now = None
-        self.dialogs = dialogs
+        self.dialogs = dict()
         self.messages_number = 0
         self.initUI()
+
+        self.start()
 
     def initUI(self):
         uic.loadUi('C:/Program Files (x86)/Messenger/main_window.ui', self)
         self.message_send_button.clicked.connect(self.send_message)
         self.message_vbar = self.messangesScrollArea.verticalScrollBar()
         self.senders_vbar = self.sendersScrollArea.verticalScrollBar()
-        self.start()
+
         self.restyle(0)
 
     def restyle(self, style):
@@ -96,7 +97,9 @@ class MyWidget(QMainWindow):
         else:
             self.dialogs[self.user_now] = [message]
 
-        save_dialog(self.user_now, self.dialogs[self.user_now])
+        # save_dialog(self.user_now, self.dialogs[self.user_now])
+        print(self.handle)
+        send_message_server(self.handle, self.token, self.user_now, message.text)
         self.sort_users()
 
     def add_message(self, text):
@@ -149,11 +152,14 @@ class MyWidget(QMainWindow):
             self.show_new_user(self.handles_of_users[i])
 
 
-def main(users_handles, users_names, number_of_users, dialogs):
-    app = QApplication(sys.argv)
-    ex = MyWidget(users_handles, users_names, number_of_users, dialogs)
-    ex.show()
-    sys.exit(app.exec_())
+def main(users_handles, users_names, number_of_users, handle, token):
+    try:
+        app = QApplication(sys.argv)
+        ex = MyWidget(users_handles, users_names, number_of_users, handle, token)
+        ex.show()
+        sys.exit(app.exec_())
+    finally:
+        open('C:/Program Files (x86)/Messenger/data', 'w')
 
 # if __name__ == '__main__':
 #     users_names = ['Тимур', 'Вова', 'Петя', 'Маша', 'Катя']
