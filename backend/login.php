@@ -28,8 +28,9 @@ function login(&$query_answer) {
         $query_answer["Error"] = "Database error while checking handle";
         return;
     }
-	
-	if (mysqli_fetch_assoc($sql_result) != null) {
+
+    $sql_result = mysqli_fetch_assoc($sql_result);
+	if ($sql_result == null) {
 	    $query_answer["Error"] = "The user with this handle not exist";
 	    return;
     }
@@ -66,5 +67,3 @@ $query_answer = ["file" => "login.php"];
 login($query_answer);
 
 echo json_encode($query_answer);
-    
-    
