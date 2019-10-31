@@ -15,24 +15,31 @@ def main():
     import sys
     import os
 
-    sys.path.insert(1, 'C:/Program Files (x86)/Messenger/')
+    # sys.path.insert(1, 'C:/Program Files (x86)/Messenger/')
 
-    from data import users_handles, users_names, number_of_users, login, password
+    from data import users_handles, users_names, number_of_users
 
-    if not login or not password:
+    with open('data', 'r') as file:
+        data = file.read().split()
+        if len(data) < 3:
+            login = ''
+            password = ''
+            token = ''
+        else:
+            login, password, token = data
+
+    if login and password:
+        token = login_request(login, password)['token']
+    else:
         os.system('main_login.py')
         # os.startfile('main_login.pyw')
-    else:
-        token = login_request(login, password)['token']
-        with open('C:/Program Files (x86)/Messenger/data', 'w') as file:
-            file.write(login + '\n')
-            file.write(password + '\n')
-            file.write(token)
 
-    with open('C:/Program Files (x86)/Messenger/data', 'r') as file:
-        login, password, token = file.read().split()
-        if not token:
-            exit(0)
+    with open('data', 'r') as file:
+        data = file.read().split()
+        if len(data) < 3:
+            exit(1)
+        else:
+            login, password, token = data
 
     # with open('C:/Program Files (x86)/Messenger/data.py') as file:
     #     data = file.read().split('\n')

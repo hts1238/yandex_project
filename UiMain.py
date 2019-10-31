@@ -1,6 +1,8 @@
 from Message import Message
 from save_dialog import save_dialog
 from send_message_server import send_message_server
+from check_message import check_message
+from refactor_message import refactor_message
 
 import sys
 from random import choice
@@ -30,7 +32,7 @@ class MyWidget(QMainWindow):
         self.start()
 
     def initUI(self):
-        uic.loadUi('C:/Program Files (x86)/Messenger/main_window.ui', self)
+        uic.loadUi('main_window.ui', self)
         self.message_send_button.clicked.connect(self.send_message)
         self.message_vbar = self.messangesScrollArea.verticalScrollBar()
         self.senders_vbar = self.sendersScrollArea.verticalScrollBar()
@@ -92,7 +94,13 @@ class MyWidget(QMainWindow):
     def send_message(self):
         if not self.user_now:
             return
-        message = Message(self.messange_input.text(), self.names_of_users[self.handle])
+        text = self.messange_input.text()
+        if not check_message(text):
+            return
+
+        text = refactor_message(text)
+
+        message = Message(text, self.names_of_users[self.handle])
         self.add_message(message)
         if self.dialogs:
             self.dialogs[self.user_now].append(message)
@@ -108,7 +116,7 @@ class MyWidget(QMainWindow):
         self.sort_users()
 
     def add_message(self, text):
-        if text.sender == self.names_of_users[self.handle]:
+        if text.sender == self.handle:
             self.messages.addWidget(text.text_to_show(), self.messages_number, 0,
                                     alignment=Qt.AlignRight)
 
@@ -166,5 +174,5 @@ def main(users_handles, users_names, dialogs, number_of_users, handle, token):
         ex.show()
         sys.exit(app.exec_())
     finally:
-        open('C:/Program Files (x86)/Messenger/data', 'w')
-
+        # open('data', 'w')
+        pass

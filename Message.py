@@ -3,18 +3,15 @@ from time import asctime, time
 
 
 class Message:
-    def __init__(self, text, sender='Вы'):
+    def __init__(self, text, sender, int_time=time()):
         self.sender = sender
-        self.time = asctime()
-        self.text = (text + '\n')
-        self.int_time = time()
+        self.time = asctime()  # Надо переделать
+        self.text = text
+        self.int_time = int_time
 
     def text_to_show(self):
         text = f'{self.sender} ({self.time}):\n{self.text}'
         label = QLabel(text)
-        # if self.sender == 'Вы':
-        #     label.setStyleSheet('font-size: 25px; color: black')
-        # else:
         label.setStyleSheet('''
         font-size: 25px;
         color: black;

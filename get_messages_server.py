@@ -8,6 +8,3 @@ def get_messages_server(handle, to_handle, token):
     answer = json.loads(response.text)
 
     return answer
-
-
-# get_messages_server('admin', 'vova', 'Is30ar1tHaqBpi5JsqgujZeTd')
