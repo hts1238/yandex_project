@@ -1,3 +1,6 @@
-﻿users_names = ['Тимур', 'Вова', 'Петя', 'Маша', 'Катя', 'Витя', 'Оля', 'Саша', 'Аня', 'Женя', 'Вова1', 'Петя1', 'Маша1', 'Катя1', 'Витя1', 'Оля1', 'Саша1', 'Аня1', 'Женя1']
+users_names = ['admin', 'Vladimir', 'vova', 'vlad']
+users_handles = ['admin', 'stbru7b5qbv', 'vova', '123']
 number_of_users = len(users_names)
 dialogs = dict()
+login = ''
+password = 'admin'

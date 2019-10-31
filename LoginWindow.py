@@ -1,3 +1,6 @@
+from RegistrationWindow import RegistrationWindow
+from login_request import login_request
+
 from PyQt5.QtCore import Qt
 from PyQt5 import uic
 from PyQt5.QtWidgets import QDialog
@@ -16,12 +19,20 @@ class LoginWindow(QDialog):
         self.setWindowFlags(Qt.WindowMaximizeButtonHint)
 
     def run(self):
-        self.close()
+        handle = self.handle_text.text()
+        password = self.password_text.text()
+        answer = login_request(handle, password)
+        if 'Error' not in answer:
+            self.save(handle, password, answer['token'])
+            self.close()
 
     def registration(self):
-        pass
+        self.registration_window = RegistrationWindow()
+        self.registration_window.setWindowModality(Qt.ApplicationModal)
+        self.registration_window.show()
 
-# app = QApplication(sys.argv)
-# ex = LoginWindow()
-# ex.show()
-# sys.exit(app.exec_())
+    def save(self, handle, password, token):
+        with open('C:/Program Files (x86)/Messenger/data', 'w') as file:
+            file.write(handle + '\n')
+            file.write(password + '\n')
+            file.write(token)
