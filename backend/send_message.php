@@ -26,7 +26,7 @@ function send_message(&$query_answer) {
         return;
     }
 
-    $user_id = get_id_from_handle($db, $from_handle, $query_answer);
+    /*$user_id = get_id_from_handle($db, $from_handle, $query_answer);
     if (!$user_id) {
         return;
     }
@@ -38,11 +38,11 @@ function send_message(&$query_answer) {
 
     if (!check_user($db, $user_id, $token, $query_answer)) {
         return;
-    }
+    }*/
 
     $sql = "INSERT ".
-        "INTO messages(from_id, to_id, text, time) ".
-        "VALUES($user_id, $to_id, '$text', ".time().")";
+        "INTO messages(from_handle, to_handle, text, time) ".
+        "VALUES('$from_handle', '$to_handle', '$text', ".time().")";
     $sql_result = mysqli_query($db, $sql);
 
     if (!$sql_result) {

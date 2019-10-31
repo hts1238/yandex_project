@@ -24,7 +24,7 @@ function get_messages(&$query_answer) {
         return;
     }
 
-    $user_id = get_id_from_handle($db, $handle, $query_answer);
+    /*$user_id = get_id_from_handle($db, $handle, $query_answer);
     if (!$user_id) {
         return;
     }
@@ -36,12 +36,12 @@ function get_messages(&$query_answer) {
 
     if (!check_user($db, $user_id, $token, $query_answer)) {
         return;
-    }
+    }*/
 
-    $sql = "SELECT from_id, to_id, text, time ".
+    $sql = "SELECT from_handle, to_handle, text, time ".
         "FROM messages ".
-        "WHERE (from_id = '$user_id' AND to_id = '$to_id') ".
-        "OR (from_id = '$to_id' AND to_id = '$user_id')";
+        "WHERE (from_handle = '$handle' AND to_handle = '$to_handle') ".
+        "OR (from_handle = '$to_handle' AND to_handle = '$handle')";
     $sql_result = mysqli_query($db, $sql);
 
     if (!$sql_result) {
@@ -51,7 +51,6 @@ function get_messages(&$query_answer) {
     }
 
     $query_answer["Good"] = "All good";
-    $query_answer["your_id"] = $user_id;
     $query_answer["result"] = mysqli_fetch_all($sql_result);
 }
 
