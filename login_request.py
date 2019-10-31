@@ -1,4 +1,4 @@
-def login_request(handle='stbru7b5qbv', password='user'):
+def login_request(handle, password):
     import requests
     import json
 
