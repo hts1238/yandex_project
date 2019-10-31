@@ -7,7 +7,7 @@ class Message:
         self.sender = sender
         self.time = asctime()  # Надо переделать
         self.text = text
-        self.int_time = int_time
+        self.int_time = int(int_time)
 
     def text_to_show(self):
         text = f'{self.sender} ({self.time}):\n{self.text}'
@@ -20,4 +20,5 @@ class Message:
         border-width: 2px;
         border-radius: 10px;
         border-color: white''')
+        label.setMaximumSize(500, 100)
         return label

@@ -17,7 +17,7 @@ def main():
 
     # sys.path.insert(1, 'C:/Program Files (x86)/Messenger/')
 
-    from data import users_handles, users_names, number_of_users
+    from data import users_handles, users_names
 
     with open('data', 'r') as file:
         data = file.read().split()
@@ -43,18 +43,18 @@ def main():
 
     # with open('C:/Program Files (x86)/Messenger/data.py') as file:
     #     data = file.read().split('\n')
+
     dialogs = dict()
-    sender = 'stbru7b5qbv'
-    dialog = get_messages_server(login, sender, token)['result']
-    print(dialog)
+    for sender in users_handles:
+        dialog = get_messages_server(login, sender, token)['result']
 
-    for message in dialog:
-        if sender not in dialogs:
-            dialogs[sender] = [Message(message[2], message[0], message[3])]
-        else:
-            dialogs[sender].append(Message(message[2], message[0], message[3]))
+        for message in dialog:
+            if sender not in dialogs:
+                dialogs[sender] = [Message(message[2], users_names[message[0]], message[3])]
+            else:
+                dialogs[sender].append(Message(message[2], users_names[message[0]], message[3]))
 
-    UiMain.main(users_handles, users_names, dialogs, number_of_users, login, token)
+    UiMain.main(users_handles, users_names, dialogs, login, token)
 
 
 if __name__ == '__main__':

@@ -1,24 +1,27 @@
 from Message import Message
-from save_dialog import save_dialog
 from send_message_server import send_message_server
 from check_message import check_message
 from refactor_message import refactor_message
+from synchronization_server import synchronization_server
 
 import sys
+import threading
 from random import choice
 from PyQt5 import uic, QtGui
 from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow, QSizePolicy
 from PyQt5.QtWidgets import QPushButton, QScrollBar, QLabel, QLineEdit
 from PyQt5.QtCore import Qt
 
+sys.setrecursionlimit(86400)  # Переопределяем предел рекурсии для синхронизации в течение суток
+
 
 class MyWidget(QMainWindow):
-    def __init__(self, users_handles, users_names, dialogs, number_of_users, handle, token):
+    def __init__(self, users_handles, users_names, dialogs, handle, token):
         super().__init__()
 
         self.handle = handle
         self.token = token
-        self.number_of_users = number_of_users
+        self.number_of_users = len(users_handles)
         self.names_of_users = dict()
         self.names_of_users = users_names
         self.handles_of_users = [*users_handles]
@@ -30,6 +33,8 @@ class MyWidget(QMainWindow):
         self.initUI()
 
         self.start()
+
+        self.synchronization()
 
     def initUI(self):
         uic.loadUi('main_window.ui', self)
@@ -58,7 +63,12 @@ class MyWidget(QMainWindow):
         if event.key() == Qt.Key_Return:
             self.send_message()
 
+    def synchronization(self):
+        synchronization_server()
+        threading.Timer(1, self.synchronization).start()
+
     def clear_users(self):
+        self.users_btn = dict()
         while self.senders.count():
             child = self.senders.takeAt(0)
             if child.widget():
@@ -81,19 +91,10 @@ class MyWidget(QMainWindow):
         QApplication.processEvents()
         self.senders_vbar.setSliderPosition(0)
 
-    def generate_message(self, sender):
-        text = ''.join([choice('qwertyuiopasdfghjklzxcvbnm') for _ in range(10)])
-        return Message(text, sender, 1572499975)
-
-    def generate_dialog(self, user):
-        if user not in self.dialogs:
-            self.dialogs[user] = [self.generate_message(
-                sender=choice([self.names_of_users[self.handle], self.names_of_users[user]]))
-                for _ in range(10)]
-
     def send_message(self):
         if not self.user_now:
             return
+
         text = self.messange_input.text()
         if not check_message(text):
             return
@@ -102,7 +103,8 @@ class MyWidget(QMainWindow):
 
         message = Message(text, self.names_of_users[self.handle])
         self.add_message(message)
-        if self.dialogs:
+
+        if self.dialogs[self.user_now]:
             self.dialogs[self.user_now].append(message)
         else:
             self.dialogs[self.user_now] = [message]
@@ -116,7 +118,7 @@ class MyWidget(QMainWindow):
         self.sort_users()
 
     def add_message(self, text):
-        if text.sender == self.handle:
+        if text.sender == self.names_of_users[self.handle]:
             self.messages.addWidget(text.text_to_show(), self.messages_number, 0,
                                     alignment=Qt.AlignRight)
 
@@ -140,13 +142,15 @@ class MyWidget(QMainWindow):
 
         self.users_showed += 1
 
-        self.generate_dialog(user)
-
     def open_new_dialog(self):
         self.clear_messages()
 
         sender = self.users_btn[self.sender()]
         self.user_now = sender
+
+        if sender not in self.dialogs:
+            self.dialogs[sender] = []
+
         for message in self.dialogs[sender]:
             self.add_message(message)
 
@@ -154,12 +158,14 @@ class MyWidget(QMainWindow):
 
         # self.messange_input.setCursorPosition(0)
 
-        save_dialog(sender, self.dialogs[sender])
-
     def sort_users(self):
         self.clear_users()
-        self.handles_of_users.sort(key=lambda l: float(-self.dialogs[l][-1].int_time))
+
+        self.handles_of_users.sort(
+            key=lambda l: -self.dialogs[l][-1].int_time if l in self.dialogs else 0)
+
         self.start()
+
         self.scroll_senders_bar()
 
     def start(self):
@@ -167,10 +173,10 @@ class MyWidget(QMainWindow):
             self.show_new_user(self.handles_of_users[i])
 
 
-def main(users_handles, users_names, dialogs, number_of_users, handle, token):
+def main(users_handles, users_names, dialogs, handle, token):
     try:
         app = QApplication(sys.argv)
-        ex = MyWidget(users_handles, users_names, dialogs, number_of_users, handle, token)
+        ex = MyWidget(users_handles, users_names, dialogs, handle, token)
         ex.show()
         sys.exit(app.exec_())
     finally:
