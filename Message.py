@@ -1,13 +1,14 @@
 from PyQt5.QtWidgets import QLabel
-from time import asctime, time
+from time import asctime, time, ctime
+from math import floor
 
 
 class Message:
-    def __init__(self, text, sender, int_time=time()):
+    def __init__(self, text, sender, int_time=None):
         self.sender = sender
-        self.time = asctime()  # Надо переделать
         self.text = text
-        self.int_time = int(int_time)
+        self.int_time = int(int_time) if int_time else floor(time())
+        self.time = ctime(self.int_time)
 
     def text_to_show(self):
         text = f'{self.sender} ({self.time}):\n{self.text}'

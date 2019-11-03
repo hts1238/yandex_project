@@ -6,11 +6,13 @@ from check_password import check_password
 from PyQt5.QtCore import Qt
 from PyQt5 import uic
 from PyQt5.QtWidgets import QDialog
+import csv
 
 
 class LoginWindow(QDialog):
     def __init__(self):
         super().__init__()
+        # self.remember = True
         self.initUI()
 
     def initUI(self):
@@ -45,7 +47,7 @@ class LoginWindow(QDialog):
         self.registration_window.show()
 
     def save(self, handle, password, token):
-        with open('data', 'w') as file:
-            file.write(handle + '\n')
-            file.write(password + '\n')
-            file.write(token)
+        with open('data.csv', 'w', encoding="utf8") as file:
+            print(handle, password, token)
+            writer = csv.writer(file, delimiter=';', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+            writer.writerow([handle, password, token])
