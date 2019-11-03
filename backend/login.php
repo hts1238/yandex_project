@@ -45,8 +45,8 @@ function login(&$query_answer) {
     if ($user_password != $password) {
         $query_answer["Error"] = [
             "id" => 10,
-            "title" => "login error: incorrct password"
-        ]
+            "title" => "login error: incorrect password"
+        ];
         return;
     }
 

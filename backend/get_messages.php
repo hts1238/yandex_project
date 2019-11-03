@@ -14,13 +14,22 @@ function get_messages(&$query_answer) {
         return;
     }
 
-    $to_handle = $_POST["to_handle"];
     $handle = $_POST["handle"];
     $token = $_POST["token"];
+    $to_handle = $_POST["to_handle"];
 
     $db = connect();
     if (!$db) {
         $query_answer["Error"] = "Couldn't connect to the database";
+        return;
+    }
+
+    $id = get_id_from_handle($db, $handle, $query_answer);
+    if (!id) {
+        return;
+    }
+
+    if (!check_user($db, $id, $token, $query_answer)) {
         return;
     }
 
