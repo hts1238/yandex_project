@@ -1,7 +1,7 @@
 <?php
 /*
- *  This script send SQL query to database from the machine describing by token and user id
- *  This script require 3 post-arguments: "user_id", "token" and "sql_query"
+ *  This script send message from one user to other
+ *  This script require 4 post-arguments: "from_handle", "token", "to_handle" and "text"
  */
 
 header('Content-Type: application/json');

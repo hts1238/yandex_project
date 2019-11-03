@@ -1,4 +1,8 @@
 <?php // login.php
+/*
+ *  This script login to user by his handle and password
+ *  This script require 2 post-arguments: "handle" and "password"
+ */
 
 include_once("functions.php");
 

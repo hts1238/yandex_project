@@ -1,4 +1,8 @@
 <?php // register_user.php
+/*
+ * This script register the user in database, but does not login
+ * This script require 4 post-parameters: "name", "handle", "email" and "password"
+ */
 
 include_once("functions.php");
 
