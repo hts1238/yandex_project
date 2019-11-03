@@ -23,7 +23,7 @@ function login(&$query_answer) {
 		return;
 	}
 	
-	$sql = "SELECT id ".
+	$sql = "SELECT id, password ".
         "FROM users ".
 		"WHERE handle = '$handle'";
 	$sql_result = mysqli_query($db, $sql);
@@ -40,6 +40,15 @@ function login(&$query_answer) {
     }
     
     $user_id = $sql_result["id"];
+    $user_password = $sql_result["password"];
+
+    if ($user_password != $password) {
+        $query_answer["Error"] = [
+            "id" => 10,
+            "title" => "login error: incorrct password"
+        ]
+        return;
+    }
 
 	$new_token = create_token();
 
