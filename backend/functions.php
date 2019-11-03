@@ -18,14 +18,15 @@ function connect() {
 }
 
 function get_id_from_handle(&$db, &$handle, &$query_answer) {
-    $sql = "SELECT id ".
-        "FROM users ".
-        "WHERE handle = '$handle'";
+    $sql = "SELECT id FROM users WHERE handle = '$handle'";
     $sql_result = mysqli_query($db, $sql);
 
     if (!$sql_result) {
-        $query_answer["Error"] = "Database error";
-        $query_answer["Database error"] = mysqli_error($db);
+        $query_answer["Error"] = [
+            "id" => "2",
+            "title" => "database error",
+            "description" => mysqli_error($db)
+        ];
         return false;
     }
 
@@ -48,7 +49,11 @@ function check_user(&$db, &$user_id, &$token, &$query_answer) {
 
     // If sql query was unsuccessful
     if (!$sql_result) {
-        $query_answer["Error"] = "Error while getting info about current token from database";
+        $query_answer["Error"] = [
+            "id" => "2",
+            "title" => "database error",
+            "description" => mysqli_error($db)
+        ];
         return false;
     }
 
@@ -72,7 +77,11 @@ function check_user(&$db, &$user_id, &$token, &$query_answer) {
         $sql_result = mysqli_query($db, $sql);
 
         if (!$sql_result) {
-            $query_answer["Error"] = "Can't update current token in database";
+            $query_answer["Error"] = [
+                "id" => "2",
+                "title" => "database error",
+                "description" => mysqli_error($db)
+            ];
             return false;
         }
     }

@@ -24,20 +24,6 @@ function get_messages(&$query_answer) {
         return;
     }
 
-    /*$user_id = get_id_from_handle($db, $handle, $query_answer);
-    if (!$user_id) {
-        return;
-    }
-
-    $to_id = get_id_from_handle($db, $to_handle, $query_answer);
-    if (!$to_id) {
-        return;
-    }
-
-    if (!check_user($db, $user_id, $token, $query_answer)) {
-        return;
-    }*/
-
     $sql = "SELECT from_handle, to_handle, text, time ".
         "FROM messages ".
         "WHERE (from_handle = '$handle' AND to_handle = '$to_handle') ".
