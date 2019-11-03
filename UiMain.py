@@ -3,8 +3,11 @@ from send_message_server import send_message_server
 from check_message import check_message
 from refactor_message import refactor_message
 from synchronization_server import synchronization_server
+from style import *
 
 import sys
+import time
+import copy
 import threading
 from random import choice
 from PyQt5 import uic, QtGui
@@ -13,6 +16,8 @@ from PyQt5.QtWidgets import QPushButton, QScrollBar, QLabel, QLineEdit
 from PyQt5.QtCore import Qt
 
 sys.setrecursionlimit(86400)  # Переопределяем предел рекурсии для синхронизации в течение суток
+
+SYNCHRONIZATION_TIME = 5  # Частота синхнонизации (в секундах)
 
 
 class MyWidget(QMainWindow):
@@ -26,7 +31,6 @@ class MyWidget(QMainWindow):
         self.names_of_users = users_names
         self.handles_of_users = [*users_handles]
         self.users_btn = dict()
-        self.users_showed = 0
         self.user_now = None
         self.dialogs = dialogs
         self.messages_number = 0
@@ -39,8 +43,6 @@ class MyWidget(QMainWindow):
     def initUI(self):
         uic.loadUi('main_window.ui', self)
         self.message_send_button.clicked.connect(self.send_message)
-        self.message_vbar = self.messangesScrollArea.verticalScrollBar()
-        self.senders_vbar = self.sendersScrollArea.verticalScrollBar()
 
         self.restyle(0)
 
@@ -48,14 +50,8 @@ class MyWidget(QMainWindow):
         # self.setStyleSheet('''
         #  background-color: #323232;''')
         # self.setStyleSheet('''background-color: #A9B7C6;''')
-        self.setStyleSheet('''background-color: rgb(210, 230, 255)''')
-        self.message_send_button.setStyleSheet('''
-         background-color: #BED6FF;
-         border-style: outset;
-         border-width: 2px;
-         border-radius: 10px;
-         min-width: 10em;
-         padding: 6px;''')
+        self.setStyleSheet(BACKGROUND_STYLE)
+        self.message_send_button.setStyleSheet(MESSAGE_SEND_BTN_STYLE)
 
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_Enter:
@@ -64,8 +60,19 @@ class MyWidget(QMainWindow):
             self.send_message()
 
     def synchronization(self):
-        synchronization_server()
-        threading.Timer(1, self.synchronization).start()
+        saved_dialogs = copy.deepcopy(self.dialogs)
+        something_new, new_senders, new_dialogs = \
+            synchronization_server(self.handle, self.token, self.handles_of_users, self.dialogs)
+        if something_new:  # Новая переписка не учтена
+            print('something_new')
+            if saved_dialogs[self.user_now] != new_dialogs[self.user_now]:
+                for message in new_dialogs[self.user_now]:
+                    if message not in saved_dialogs[self.user_now]:
+                        self.add_message(message)  # Не работает, хз почему
+            self.dialogs = copy.deepcopy(new_dialogs)
+            self.number_of_users = len(self.dialogs)
+            self.start()  # Не работает, хз почему
+        threading.Timer(SYNCHRONIZATION_TIME, self.synchronization).start()
 
     def clear_users(self):
         self.users_btn = dict()
@@ -83,13 +90,14 @@ class MyWidget(QMainWindow):
     def scroll_message_bar(self, n):
         for _ in range(n):
             QApplication.processEvents()
-        self.message_vbar.setSliderPosition(self.message_vbar.maximum())
-        # self.message_vbar.setValue(self.message_vbar.maximum())
-        # self.message_vbar.setSliderDown(True)
+        message_vbar = self.messangesScrollArea.verticalScrollBar()
+        message_vbar.setSliderPosition(message_vbar.maximum())
+        # message_vbar.setValue(self.message_vbar.maximum())
+        # message_vbar.setSliderDown(True)
 
     def scroll_senders_bar(self):
         QApplication.processEvents()
-        self.senders_vbar.setSliderPosition(0)
+        self.sendersScrollArea.verticalScrollBar().setSliderPosition(0)
 
     def send_message(self):
         if not self.user_now:
@@ -115,15 +123,15 @@ class MyWidget(QMainWindow):
 
         self.messange_input.clear()
 
-        self.sort_users()
+        self.start()
 
-    def add_message(self, text):
-        if text.sender == self.names_of_users[self.handle]:
-            self.messages.addWidget(text.text_to_show(), self.messages_number, 0,
+    def add_message(self, message):
+        if message.sender == self.names_of_users[self.handle]:
+            self.messages.addWidget(message.text_to_show(), self.messages_number, 0,
                                     alignment=Qt.AlignRight)
 
         else:
-            self.messages.addWidget(text.text_to_show(), self.messages_number, 0,
+            self.messages.addWidget(message.text_to_show(), self.messages_number, 0,
                                     alignment=Qt.AlignLeft)
         self.messages_number += 1
 
@@ -135,15 +143,20 @@ class MyWidget(QMainWindow):
 
         btn.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
         btn.setMinimumHeight(150)
-        btn.setStyleSheet('background-color: #BED6FF; font-size: 35px')
+
+        btn.setStyleSheet(SENDER_BACKGROUND_STYLE)
         # self.senders.addWidget(btn, self.users_showed, 0, alignment=Qt.AlignVCenter)
         self.senders.addWidget(btn)
-        self.users_btn[btn] = user
 
-        self.users_showed += 1
+        self.users_btn[btn] = user
 
     def open_new_dialog(self):
         self.clear_messages()
+
+        for btn in self.users_btn.keys():
+            btn.setStyleSheet(SENDER_BACKGROUND_STYLE)
+
+        self.sender().setStyleSheet(SENDER_NOW_BACKGROUND_STYLE)
 
         sender = self.users_btn[self.sender()]
         self.user_now = sender
@@ -159,26 +172,23 @@ class MyWidget(QMainWindow):
         # self.messange_input.setCursorPosition(0)
 
     def sort_users(self):
-        self.clear_users()
-
-        self.handles_of_users.sort(
-            key=lambda l: -self.dialogs[l][-1].int_time if l in self.dialogs else 0)
-
-        self.start()
-
-        self.scroll_senders_bar()
+        k = lambda l: -self.dialogs[l][-1].int_time if l in self.dialogs and self.dialogs[l] else 0
+        self.handles_of_users.sort(key=k)
+        # self.scroll_senders_bar()
 
     def start(self):
+        self.clear_users()
+        self.sort_users()
         for i in range(self.number_of_users):
             self.show_new_user(self.handles_of_users[i])
 
 
-def main(users_handles, users_names, dialogs, handle, token):
+def main(users_handles, users_names, dialogs, handle, token, remember):
     try:
         app = QApplication(sys.argv)
         ex = MyWidget(users_handles, users_names, dialogs, handle, token)
         ex.show()
         sys.exit(app.exec_())
     finally:
-        # open('data', 'w')
-        pass
+        if remember == 'False':
+            open('data.csv', 'w')
