@@ -1,8 +1,9 @@
-BACKGROUND_COLOR = 'rgb(210, 230, 255)'
-SENDER_BACKGROUND_COLOR = '#BED6FF'
-SENDER_NOW_BACKGROUND_COLOR = '#8FB8FF'
-SENDER_FONT_SIZE = '35px'
-MESSAGE_FONT_SIZE = '25px'
+BACKGROUND_STYLE = 'background-color: rgb(210, 230, 255)'
+SENDER_BACKGROUND_STYLE = '''background-color: #BED6FF;
+                                 font-size: 35px'''
+SENDER_NOW_BACKGROUND_STYLE = '''background-color: #8FB8FF;
+                             font-size: 35px'''
+MESSAGE_STYLE = '25px'
 MESSAGE_SEND_BTN_STYLE = '''
          background-color: rgb(210, 230, 255);
          border-style: outset;

@@ -21,14 +21,16 @@ def main():
     from data import users_handles, users_names
 
     with open('data.csv', encoding="utf8") as file:
-        reader = list(csv.reader(file, delimiter=';', quotechar='"'))[0]
+        reader = list(csv.reader(file, delimiter=';', quotechar='"'))
+        reader = reader[0] if reader else []
         data = reader
-        if len(data) < 3:
+        if len(data) < 4:
             login = ''
             password = ''
             token = ''
+            remember = False
         else:
-            login, password, token = data
+            login, password, token, remember = data
 
     if login and password:
         token = login_request(login, password)['token']
@@ -37,12 +39,14 @@ def main():
         # os.startfile('main_login.pyw')
 
     with open('data.csv', encoding="utf8") as file:
-        reader = list(csv.reader(file, delimiter=';', quotechar='"'))[0]
+        reader = list(csv.reader(file, delimiter=';', quotechar='"'))
+        reader = reader[0] if reader else []
         data = reader
-        if len(data) < 3:
+        print(data)
+        if len(data) < 4:
             exit(228)
         else:
-            login, password, token = data
+            login, password, token, remember = data
 
     # with open('C:/Program Files (x86)/Messenger/data.py') as file:
     #     data = file.read().split('\n')
@@ -58,7 +62,7 @@ def main():
         if not dialog:
             dialogs[sender] = []
 
-    UiMain.main(users_handles, users_names, dialogs, login, token)
+    UiMain.main(users_handles, users_names, dialogs, login, token, remember)
 
 
 if __name__ == '__main__':

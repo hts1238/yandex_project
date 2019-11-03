@@ -13,7 +13,7 @@ def synchronization_server(handle, token, senders, dialogs):
 
     new_senders = get_senders()
 
-    something_new = bool(senders != new_senders)
+    something_new = bool(set(senders) != set(new_senders))
 
     senders = new_senders
 

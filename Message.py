@@ -10,6 +10,10 @@ class Message:
         self.int_time = int(int_time) if int_time else floor(time())
         self.time = ctime(self.int_time)
 
+    def __eq__(self, other):
+        return self.sender == other.sender and \
+               self.text == other.text and self.int_time == other.int_time
+
     def text_to_show(self):
         text = f'{self.sender} ({self.time}):\n{self.text}'
         label = QLabel(text)
