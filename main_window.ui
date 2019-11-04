@@ -6,12 +6,24 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>745</width>
-    <height>526</height>
+    <width>520</width>
+    <height>467</height>
    </rect>
+  </property>
+  <property name="font">
+   <font>
+    <family>Sans Serif</family>
+   </font>
   </property>
   <property name="windowTitle">
    <string>Messenger</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: #334;
+color: #fff;</string>
+  </property>
+  <property name="tabShape">
+   <enum>QTabWidget::Rounded</enum>
   </property>
   <widget class="QWidget" name="centralWidget">
    <property name="sizePolicy">
@@ -20,9 +32,42 @@
      <verstretch>0</verstretch>
     </sizepolicy>
    </property>
+   <property name="styleSheet">
+    <string notr="true">border: 0;</string>
+   </property>
    <layout class="QHBoxLayout" name="horizontalLayout">
+    <property name="spacing">
+     <number>0</number>
+    </property>
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
+     <number>0</number>
+    </property>
     <item>
      <widget class="QScrollArea" name="sendersScrollArea">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>100</width>
+        <height>0</height>
+       </size>
+      </property>
       <property name="maximumSize">
        <size>
         <width>400</width>
@@ -34,6 +79,11 @@
         <pointsize>25</pointsize>
        </font>
       </property>
+      <property name="styleSheet">
+       <string notr="true">margin: 0;
+border: 0;
+border-right: 1px solid #668;</string>
+      </property>
       <property name="widgetResizable">
        <bool>true</bool>
       </property>
@@ -42,76 +92,328 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>359</width>
-         <height>506</height>
+         <width>98</width>
+         <height>465</height>
         </rect>
        </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="font">
+        <font>
+         <family>Sans Serif</family>
+        </font>
+       </property>
+       <property name="contextMenuPolicy">
+        <enum>Qt::DefaultContextMenu</enum>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">border: 0;</string>
+       </property>
        <layout class="QVBoxLayout" name="verticalLayout_4">
+        <property name="spacing">
+         <number>0</number>
+        </property>
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
         <item>
-         <layout class="QGridLayout" name="senders"/>
+         <widget class="QWidget" name="top_panel_2" native="true">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>50</height>
+           </size>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">border: 0;
+border-radius: 0;</string>
+          </property>
+          <layout class="QHBoxLayout" name="top_panel">
+           <property name="spacing">
+            <number>5</number>
+           </property>
+           <property name="sizeConstraint">
+            <enum>QLayout::SetMinimumSize</enum>
+           </property>
+           <property name="leftMargin">
+            <number>5</number>
+           </property>
+           <property name="topMargin">
+            <number>5</number>
+           </property>
+           <property name="rightMargin">
+            <number>5</number>
+           </property>
+           <property name="bottomMargin">
+            <number>5</number>
+           </property>
+           <item>
+            <widget class="QPushButton" name="top_button_2">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background-color: #222;
+border: 1px solid #333;
+border-radius: 10px;</string>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="top_button_1">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background-color: #222;
+border: 1px solid #333;
+border-radius: 10px;</string>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QWidget" name="senders_2" native="true">
+          <property name="styleSheet">
+           <string notr="true">border-width: 0;
+border-radius: 0;</string>
+          </property>
+          <layout class="QGridLayout" name="senders">
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
+           <property name="spacing">
+            <number>0</number>
+           </property>
+          </layout>
+         </widget>
         </item>
        </layout>
       </widget>
      </widget>
     </item>
     <item>
-     <layout class="QGridLayout" name="message_field">
-      <item row="1" column="0">
-       <layout class="QHBoxLayout" name="do_messange">
-        <item>
-         <widget class="QLineEdit" name="messange_input">
-          <property name="minimumSize">
-           <size>
-            <width>0</width>
-            <height>100</height>
-           </size>
-          </property>
-          <property name="font">
-           <font>
-            <family>Calibri</family>
-            <pointsize>25</pointsize>
-           </font>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="message_send_button">
-          <property name="minimumSize">
-           <size>
-            <width>0</width>
-            <height>100</height>
-           </size>
-          </property>
-          <property name="text">
-           <string>Отправить</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-      <item row="0" column="0">
-       <widget class="QScrollArea" name="messangesScrollArea">
-        <property name="widgetResizable">
-         <bool>true</bool>
-        </property>
-        <widget class="QWidget" name="scrollAreaWidgetContents_2">
-         <property name="geometry">
-          <rect>
-           <x>0</x>
-           <y>0</y>
-           <width>356</width>
-           <height>396</height>
-          </rect>
+     <widget class="QWidget" name="message_panel" native="true">
+      <property name="autoFillBackground">
+       <bool>false</bool>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">border: 0;</string>
+      </property>
+      <layout class="QGridLayout" name="message_field">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <property name="spacing">
+        <number>0</number>
+       </property>
+       <item row="1" column="0">
+        <widget class="QScrollArea" name="messangesScrollArea">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
          </property>
-         <layout class="QVBoxLayout" name="verticalLayout">
+         <property name="styleSheet">
+          <string notr="true">border: 0</string>
+         </property>
+         <property name="widgetResizable">
+          <bool>true</bool>
+         </property>
+         <widget class="QWidget" name="scrollAreaWidgetContents_2">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>420</width>
+            <height>347</height>
+           </rect>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">border: 0;</string>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout">
+           <property name="spacing">
+            <number>0</number>
+           </property>
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
+           <item>
+            <widget class="QWidget" name="messages_2" native="true">
+             <property name="styleSheet">
+              <string notr="true">border: 0;</string>
+             </property>
+             <layout class="QGridLayout" name="messages">
+              <property name="spacing">
+               <number>0</number>
+              </property>
+             </layout>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </widget>
+       </item>
+       <item row="0" column="0">
+        <widget class="QWidget" name="info_panel" native="true">
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>50</height>
+          </size>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">border-bottom: 1px solid #668;</string>
+         </property>
+         <layout class="QHBoxLayout" name="horizontalLayout_2"/>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QWidget" name="send_message_panel" native="true">
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>70</height>
+          </size>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">border: 0;
+border-top: 1px solid #668;</string>
+         </property>
+         <layout class="QHBoxLayout" name="do_messange">
+          <property name="spacing">
+           <number>0</number>
+          </property>
+          <property name="sizeConstraint">
+           <enum>QLayout::SetDefaultConstraint</enum>
+          </property>
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
+           <number>0</number>
+          </property>
           <item>
-           <layout class="QGridLayout" name="messages"/>
+           <widget class="QLineEdit" name="messange_input">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>70</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <family>Calibri</family>
+              <pointsize>25</pointsize>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">margin: 10px;
+background-color: #555;
+border: 1px solid #444;
+border-radius: 10px</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="message_send_button">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>50</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <family>Sans Serif</family>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background-image: url(&quot;icons/send_icon.png&quot;);
+/*background-color: #334;*/
+border: 0;
+border-radius: 10px;
+padding: 0 10px;
+margin: 0 5px;</string>
+            </property>
+            <property name="text">
+             <string>Отправить</string>
+            </property>
+           </widget>
           </item>
          </layout>
         </widget>
-       </widget>
-      </item>
-     </layout>
+       </item>
+      </layout>
+     </widget>
     </item>
    </layout>
   </widget>

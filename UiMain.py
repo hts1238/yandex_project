@@ -55,7 +55,7 @@ class MyWidget(QMainWindow):
         if event.key() == Qt.Key_Enter:
             self.send_message()
         if event.key() == Qt.Key_Return:
-            self.send1_message()
+            self.send_message()
         if event.key() == Qt.Key_1:
             self.synchronization()
 
@@ -71,6 +71,7 @@ class MyWidget(QMainWindow):
             if self.user_now and saved_dialogs[self.user_now] != new_dialogs[self.user_now]:
                 for message in new_dialogs[self.user_now]:
                     if message not in saved_dialogs[self.user_now]:
+                        print("add_message", message)
                         self.add_message(message)  # Не работает, хз почему
             self.dialogs = copy.deepcopy(new_dialogs)
             self.number_of_users = len(self.dialogs)
