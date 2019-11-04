@@ -1,9 +1,9 @@
-def synchronization_server(handle, token, senders, dialogs):
+def synchronization_server(handle, token, senders, dialogs, names_of_users):
     def get_senders():
         return ['admin', 'stbru7b5qbv', 'vova', '123']
 
     def get_name_from_handle(handle):
-        return {'admin': 'admin', 'stbru7b5qbv': 'Vladimir', 'vova': 'vova', '123': 'vlad'}[handle]
+        return names_of_users[handle]
 
     def get_dialog(sender):
         from get_messages_server import get_messages_server
@@ -14,13 +14,12 @@ def synchronization_server(handle, token, senders, dialogs):
     new_senders = get_senders()
 
     something_new = bool(set(senders) != set(new_senders))
-
     senders = new_senders
 
     for sender in senders:
         old_dialog = dialogs[sender]
         new_dialog = get_dialog(sender)
-        if old_dialog != new_dialog:
+        if old_dialog[-1] != new_dialog[-1]:
             something_new = True
             dialogs[sender] = new_dialog
 

@@ -38,8 +38,6 @@ class MyWidget(QMainWindow):
 
         self.start()
 
-        self.synchronization()
-
     def initUI(self):
         uic.loadUi('main_window.ui', self)
         self.message_send_button.clicked.connect(self.send_message)
@@ -57,22 +55,27 @@ class MyWidget(QMainWindow):
         if event.key() == Qt.Key_Enter:
             self.send_message()
         if event.key() == Qt.Key_Return:
-            self.send_message()
+            self.send1_message()
+        if event.key() == Qt.Key_1:
+            self.synchronization()
 
     def synchronization(self):
         saved_dialogs = copy.deepcopy(self.dialogs)
-        something_new, new_senders, new_dialogs = \
-            synchronization_server(self.handle, self.token, self.handles_of_users, self.dialogs)
+        something_new, new_senders, new_dialogs = synchronization_server(self.handle,
+                                                                         self.token,
+                                                                         self.handles_of_users,
+                                                                         self.dialogs,
+                                                                         self.names_of_users)
         if something_new:  # Новая переписка не учтена
             print('something_new')
-            if saved_dialogs[self.user_now] != new_dialogs[self.user_now]:
+            if self.user_now and saved_dialogs[self.user_now] != new_dialogs[self.user_now]:
                 for message in new_dialogs[self.user_now]:
                     if message not in saved_dialogs[self.user_now]:
                         self.add_message(message)  # Не работает, хз почему
             self.dialogs = copy.deepcopy(new_dialogs)
             self.number_of_users = len(self.dialogs)
-            self.start()  # Не работает, хз почему
-        threading.Timer(SYNCHRONIZATION_TIME, self.synchronization).start()
+            self.start()
+        # threading.Timer(SYNCHRONIZATION_TIME, self.synchronization).start()
 
     def clear_users(self):
         self.users_btn = dict()
@@ -144,8 +147,11 @@ class MyWidget(QMainWindow):
         btn.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
         btn.setMinimumHeight(150)
 
-        btn.setStyleSheet(SENDER_BACKGROUND_STYLE)
+        btn.setStyleSheet(SENDER_BACKGROUND_STYLE if user != self.user_now
+                          else SENDER_NOW_BACKGROUND_STYLE)
+
         # self.senders.addWidget(btn, self.users_showed, 0, alignment=Qt.AlignVCenter)
+
         self.senders.addWidget(btn)
 
         self.users_btn[btn] = user
@@ -181,6 +187,7 @@ class MyWidget(QMainWindow):
         self.sort_users()
         for i in range(self.number_of_users):
             self.show_new_user(self.handles_of_users[i])
+        self.scroll_senders_bar()
 
 
 def main(users_handles, users_names, dialogs, handle, token, remember):

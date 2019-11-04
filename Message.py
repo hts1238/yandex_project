@@ -12,7 +12,7 @@ class Message:
 
     def __eq__(self, other):
         return self.sender == other.sender and \
-               self.text == other.text and self.int_time == other.int_time
+               self.text == other.text and abs(self.int_time - other.int_time) <= 3
 
     def text_to_show(self):
         text = f'{self.sender} ({self.time}):\n{self.text}'
@@ -25,5 +25,4 @@ class Message:
         border-width: 2px;
         border-radius: 10px;
         border-color: white''')
-        label.setMaximumSize(500, 100)
         return label
