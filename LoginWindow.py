@@ -38,6 +38,7 @@ class LoginWindow(QDialog):
             self.handle_corr.setStyleSheet('color: red')
         else:
             self.handle_corr.setText('')
+
         if not check_password(password):
             self.password_corr.setText('Incorrect')
             self.password_corr.setStyleSheet('color: red')
@@ -49,8 +50,12 @@ class LoginWindow(QDialog):
             self.save(handle, password, answer['token'])
             self.close()
         else:
-            self.password_corr.setText('Incorrect')
-            self.password_corr.setStyleSheet('color: red')
+            if 'handle' in answer['Error']:
+                self.handle_corr.setText('Incorrect')
+                self.handle_corr.setStyleSheet('color: red')
+            else:
+                self.password_corr.setText('Incorrect')
+                self.password_corr.setStyleSheet('color: red')
 
     def registration(self):
         self.registration_window = RegistrationWindow()

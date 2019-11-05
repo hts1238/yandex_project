@@ -9,4 +9,4 @@ def get_senders_server(handle, token):
 
     print(answer)
 
-    return answer.keys()
+    return answer.keys() if answer else []

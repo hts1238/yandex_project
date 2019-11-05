@@ -5,6 +5,8 @@
 █   █ █     █   █ █   █  █ █  █ █   █ █
 █   █ ███ ███ ███ ███ █  █ ████ ███ █ █
 """
+# vova
+# 6HZY2cWus9bG8Dy
 
 from files import *
 
@@ -54,7 +56,9 @@ def main():
     # with open('C:/Program Files (x86)/Messenger/data.py') as file:
     #     data = file.read().split('\n')
 
-    users_handles = get_senders_server(login, token)
+    users_handles = list(get_senders_server(login, token))
+    if login not in users_handles:
+        users_handles.append(login)
 
     users_names = dict()
 

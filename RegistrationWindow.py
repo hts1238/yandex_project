@@ -3,7 +3,7 @@ from send_email import send_email
 from generate_password import generate_password
 from check_password import check_password
 from check_handle import check_handle
-from files import  *
+from files import *
 
 from PyQt5.QtCore import Qt
 from PyQt5 import uic
@@ -27,9 +27,13 @@ class RegistrationWindow(QDialog):
         name = self.name_text.text()
         handle = self.handle_text.text()
         password = self.password_text.text()
-        if check_handle(password):
+        if not check_handle(password):
+            self.handle_corr.setText('Incorrect')
+            self.handle_corr.setStyleSheet('color: red')
             return
         if not check_password(password):
+            self.password.setText('Incorrect')
+            self.password.setStyleSheet('color: red')
             return
         answer = registration_request(email, name, handle, password)
 
@@ -38,3 +42,6 @@ class RegistrationWindow(QDialog):
             self.token = answer['token']
             print(self.token)
             self.close()
+        else:
+            self.handle_corr.setText('Incorrect')
+            self.handle_corr.setStyleSheet('color: red')
