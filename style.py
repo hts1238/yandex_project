@@ -9,6 +9,11 @@ SENDER_BACKGROUND_STYLE = '''
     font-size: 35px;
 '''
 
+INPUT_DIALOG_BACKGROUND_STYLE = '''
+    background-color: #334;
+    color: #fff;
+    font-size: 25px;
+'''
 SENDER_NOW_BACKGROUND_STYLE = '''
     background-color: #557;
     color: #fff;
@@ -16,7 +21,13 @@ SENDER_NOW_BACKGROUND_STYLE = '''
 '''
 
 MESSAGE_STYLE = '''
-    25px
+    font-size: 25px;
+    color: #fff;
+    background-color: #557;
+    border: 2px outset #668;
+    border-radius: 10px;
+    min-width: 10em;
+    padding: 6px;
 '''
 
 MESSAGE_SEND_BTN_STYLE = '''

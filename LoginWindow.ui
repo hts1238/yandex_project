@@ -17,9 +17,9 @@
    <item>
     <layout class="QGridLayout" name="gridLayout">
      <item row="2" column="2">
-      <widget class="QLabel" name="label_2">
+      <widget class="QLabel" name="password_corr">
        <property name="text">
-        <string>TextLabel</string>
+        <string/>
        </property>
       </widget>
      </item>
@@ -190,9 +190,9 @@ border-radius: 10px</string>
       </widget>
      </item>
      <item row="1" column="2">
-      <widget class="QLabel" name="label">
+      <widget class="QLabel" name="handle_corr">
        <property name="text">
-        <string>TextLabel</string>
+        <string/>
        </property>
       </widget>
      </item>

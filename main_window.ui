@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>MainWindow</class>
  <widget class="QMainWindow" name="MainWindow">
@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>520</width>
-    <height>467</height>
+    <width>1000</width>
+    <height>650</height>
    </rect>
   </property>
   <property name="font">
@@ -92,8 +92,8 @@ border-right: 1px solid #668;</string>
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>98</width>
-         <height>465</height>
+         <width>398</width>
+         <height>648</height>
         </rect>
        </property>
        <property name="sizePolicy">
@@ -167,12 +167,23 @@ border-radius: 0;</string>
             <number>5</number>
            </property>
            <item>
-            <widget class="QPushButton" name="top_button_2">
+            <widget class="QPushButton" name="new_dialog_btn">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                <horstretch>0</horstretch>
                <verstretch>0</verstretch>
               </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>100</width>
+               <height>50</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>12</pointsize>
+              </font>
              </property>
              <property name="styleSheet">
               <string notr="true">background-color: #222;
@@ -180,17 +191,28 @@ border: 1px solid #333;
 border-radius: 10px;</string>
              </property>
              <property name="text">
-              <string/>
+              <string>Начать новый диалог</string>
              </property>
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="top_button_1">
+            <widget class="QPushButton" name="exit_btn">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                <horstretch>0</horstretch>
                <verstretch>0</verstretch>
               </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>100</width>
+               <height>50</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>15</pointsize>
+              </font>
              </property>
              <property name="styleSheet">
               <string notr="true">background-color: #222;
@@ -198,7 +220,7 @@ border: 1px solid #333;
 border-radius: 10px;</string>
              </property>
              <property name="text">
-              <string/>
+              <string>Выход</string>
              </property>
             </widget>
            </item>
@@ -277,8 +299,8 @@ border-radius: 0;</string>
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>420</width>
-            <height>347</height>
+            <width>600</width>
+            <height>530</height>
            </rect>
           </property>
           <property name="styleSheet">

@@ -199,30 +199,30 @@ border-radius: 10px</string>
       </widget>
      </item>
      <item row="1" column="2">
-      <widget class="QLabel" name="label">
+      <widget class="QLabel" name="name_corr">
        <property name="text">
-        <string>TextLabel</string>
+        <string> </string>
        </property>
       </widget>
      </item>
      <item row="2" column="2">
-      <widget class="QLabel" name="label_2">
+      <widget class="QLabel" name="handle_corr">
        <property name="text">
-        <string>TextLabel</string>
+        <string> </string>
        </property>
       </widget>
      </item>
      <item row="3" column="2">
-      <widget class="QLabel" name="label_3">
+      <widget class="QLabel" name="email_corr">
        <property name="text">
-        <string>TextLabel</string>
+        <string> </string>
        </property>
       </widget>
      </item>
      <item row="4" column="2">
-      <widget class="QLabel" name="label_4">
+      <widget class="QLabel" name="password">
        <property name="text">
-        <string>TextLabel</string>
+        <string> </string>
        </property>
       </widget>
      </item>
