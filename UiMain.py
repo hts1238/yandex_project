@@ -67,6 +67,8 @@ class MyWidget(QMainWindow):
             self.send_message()
         if event.key() == Qt.Key_Return:
             self.send_message()
+        if event.key() == Qt.Key_1:
+            self.synchronization()
 
     def mouseMoveEvent(self, event):
         if time.time() - self.last_synchronization_time > 1:
@@ -80,6 +82,7 @@ class MyWidget(QMainWindow):
                                                                          self.handles_of_users,
                                                                          self.dialogs,
                                                                          self.names_of_users)
+
         if something_new:
             print('something_new')
             if self.user_now and saved_dialogs[self.user_now] != new_dialogs[self.user_now]:
@@ -165,6 +168,7 @@ class MyWidget(QMainWindow):
                           else SENDER_NOW_BACKGROUND_STYLE)
 
         # self.senders.addWidget(btn, self.users_showed, 0, alignment=Qt.AlignVCenter)
+
         self.senders.addWidget(btn)
 
         self.users_btn[btn] = user
