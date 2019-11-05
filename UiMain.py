@@ -1,19 +1,21 @@
-from Message import Message
-from send_message_server import send_message_server
-from check_message import check_message
-from refactor_message import refactor_message
-from synchronization_server import synchronization_server
-from style import *
-
 import sys
 import time
 import copy
 import threading
-from random import choice
-from PyQt5 import uic, QtGui
-from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow, QSizePolicy
-from PyQt5.QtWidgets import QPushButton, QScrollBar, QLabel, QLineEdit
+from PyQt5 import uic
 from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QApplication, QMainWindow, QSizePolicy
+from PyQt5.QtWidgets import QPushButton, QInputDialog
+
+from Message import Message
+from send_message_server import send_message_server
+from check_message import check_message
+from check_handle import check_handle
+from refactor_message import refactor_message
+from synchronization_server import synchronization_server
+from get_name_from_handle_server import get_name_from_handle_server
+from files import *
+from style import *
 
 sys.setrecursionlimit(86400)  # Переопределяем предел рекурсии для синхронизации в течение суток
 
@@ -34,30 +36,42 @@ class MyWidget(QMainWindow):
         self.user_now = None
         self.dialogs = dialogs
         self.messages_number = 0
+        self.last_synchronization_time = time.time()
+
+        self.setMouseTracking(True)
+
         self.initUI()
 
         self.start()
 
     def initUI(self):
-        uic.loadUi('main_window.ui', self)
+        uic.loadUi(MAIN_WINDOW_UI, self)
+
         self.message_send_button.clicked.connect(self.send_message)
 
-        self.restyle(0)
+        self.exit_btn.clicked.connect(self.exit_user)
 
-    def restyle(self, style):
-        # self.setStyleSheet('''
-        #  background-color: #323232;''')
-        # self.setStyleSheet('''background-color: #A9B7C6;''')
+        self.new_dialog_btn.clicked.connect(self.start_new_dialog)
+
+        self.restyle()
+
+    def restyle(self):
         self.setStyleSheet(BACKGROUND_STYLE)
         self.message_send_button.setStyleSheet(MESSAGE_SEND_BTN_STYLE)
 
     def keyPressEvent(self, event):
+        if time.time() - self.last_synchronization_time > SYNCHRONIZATION_TIME:
+            self.synchronization()
+            self.last_synchronization_time = time.time()
         if event.key() == Qt.Key_Enter:
             self.send_message()
         if event.key() == Qt.Key_Return:
-            self.send1_message()
-        if event.key() == Qt.Key_1:
+            self.send_message()
+
+    def mouseMoveEvent(self, event):
+        if time.time() - self.last_synchronization_time > 1:
             self.synchronization()
+            self.last_synchronization_time = time.time()
 
     def synchronization(self):
         saved_dialogs = copy.deepcopy(self.dialogs)
@@ -66,12 +80,12 @@ class MyWidget(QMainWindow):
                                                                          self.handles_of_users,
                                                                          self.dialogs,
                                                                          self.names_of_users)
-        if something_new:  # Новая переписка не учтена
+        if something_new:
             print('something_new')
             if self.user_now and saved_dialogs[self.user_now] != new_dialogs[self.user_now]:
                 for message in new_dialogs[self.user_now]:
                     if message not in saved_dialogs[self.user_now]:
-                        self.add_message(message)  # Не работает, хз почему
+                        self.add_message(message)
             self.dialogs = copy.deepcopy(new_dialogs)
             self.number_of_users = len(self.dialogs)
             self.start()
@@ -151,7 +165,6 @@ class MyWidget(QMainWindow):
                           else SENDER_NOW_BACKGROUND_STYLE)
 
         # self.senders.addWidget(btn, self.users_showed, 0, alignment=Qt.AlignVCenter)
-
         self.senders.addWidget(btn)
 
         self.users_btn[btn] = user
@@ -189,6 +202,23 @@ class MyWidget(QMainWindow):
             self.show_new_user(self.handles_of_users[i])
         self.scroll_senders_bar()
 
+    def start_new_dialog(self):
+        input_dialog = QInputDialog
+        input_dialog.setStyleSheet(self, INPUT_DIALOG_BACKGROUND_STYLE)
+        handle, okBtnPressed = QInputDialog.getText(self, 'Новый диалог',
+                                                    'Введите handle пользователя')
+        if okBtnPressed and handle not in self.handles_of_users:
+            if not check_handle(handle):
+                self.handles_of_users.append(handle)
+                self.names_of_users[handle] = get_name_from_handle_server(handle)
+                send_message_server(self.handle, self.token, handle, 'Hi')
+                self.synchronization()
+
+    def exit_user(self):
+        open(DATA, 'w')
+        self.close()
+        exit(0)
+
 
 def main(users_handles, users_names, dialogs, handle, token, remember):
     try:
@@ -198,4 +228,4 @@ def main(users_handles, users_names, dialogs, handle, token, remember):
         sys.exit(app.exec_())
     finally:
         if remember == 'False':
-            open('data.csv', 'w')
+            open(DATA, 'w')

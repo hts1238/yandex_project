@@ -2,6 +2,8 @@ from registration_request import registration_request
 from send_email import send_email
 from generate_password import generate_password
 from check_password import check_password
+from check_handle import check_handle
+from files import  *
 
 from PyQt5.QtCore import Qt
 from PyQt5 import uic
@@ -14,7 +16,7 @@ class RegistrationWindow(QDialog):
         self.initUI()
 
     def initUI(self):
-        uic.loadUi('RegistrationWindow.ui', self)
+        uic.loadUi(REGISTRATION_UI, self)
         self.setFixedSize(650, 700)
         self.setWindowFlags(Qt.WindowMaximizeButtonHint)
         self.ok_btn.clicked.connect(self.run)
@@ -25,6 +27,8 @@ class RegistrationWindow(QDialog):
         name = self.name_text.text()
         handle = self.handle_text.text()
         password = self.password_text.text()
+        if check_handle(password):
+            return
         if not check_password(password):
             return
         answer = registration_request(email, name, handle, password)

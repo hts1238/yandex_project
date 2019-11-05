@@ -6,21 +6,24 @@
 █   █ ███ ███ ███ ███ █  █ ████ ███ █ █
 """
 
+from files import *
+
 
 def main():
-    import UiMain
-    from Message import Message
-    from login_request import login_request
-    from get_messages_server import get_messages_server
     import sys
     import os
     import csv
 
+    import UiMain
+    from Message import Message
+    from login_request import login_request
+    from get_messages_server import get_messages_server
+    from get_senders_server import get_senders_server
+    from get_name_from_handle_server import get_name_from_handle_server
+
     # sys.path.insert(1, 'C:/Program Files (x86)/Messenger/')
 
-    from data import users_handles, users_names
-
-    with open('data.csv', encoding="utf8") as file:
+    with open(DATA, encoding="utf8") as file:
         reader = list(csv.reader(file, delimiter=';', quotechar='"'))
         reader = reader[0] if reader else []
         data = reader
@@ -35,10 +38,10 @@ def main():
     if login and password:
         token = login_request(login, password)['token']
     else:
-        os.system('main_login.py')
+        os.system(LOGIN_PY)
         # os.startfile('main_login.pyw')
 
-    with open('data.csv', encoding="utf8") as file:
+    with open(DATA, encoding="utf8") as file:
         reader = list(csv.reader(file, delimiter=';', quotechar='"'))
         reader = reader[0] if reader else []
         data = reader
@@ -50,6 +53,13 @@ def main():
 
     # with open('C:/Program Files (x86)/Messenger/data.py') as file:
     #     data = file.read().split('\n')
+
+    users_handles = get_senders_server(login, token)
+
+    users_names = dict()
+
+    for handle in users_handles:
+        users_names[handle] = get_name_from_handle_server(handle)
 
     dialogs = dict()
     for sender in users_handles:

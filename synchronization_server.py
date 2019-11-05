@@ -1,6 +1,7 @@
 def synchronization_server(handle, token, senders, dialogs, names_of_users):
     def get_senders():
-        return ['admin', 'stbru7b5qbv', 'vova', '123']
+        from get_senders_server import get_senders_server
+        return get_senders_server(handle, token)
 
     def get_name_from_handle(handle):
         return names_of_users[handle]
@@ -15,11 +16,10 @@ def synchronization_server(handle, token, senders, dialogs, names_of_users):
 
     something_new = bool(set(senders) != set(new_senders))
     senders = new_senders
-
     for sender in senders:
-        old_dialog = dialogs[sender]
+        old_dialog = dialogs[sender] if sender in dialogs else []
         new_dialog = get_dialog(sender)
-        if old_dialog[-1] != new_dialog[-1]:
+        if not old_dialog or old_dialog[-1] != new_dialog[-1]:
             something_new = True
             dialogs[sender] = new_dialog
 

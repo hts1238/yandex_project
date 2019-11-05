@@ -1,6 +1,7 @@
 from PyQt5.QtWidgets import QLabel
-from time import asctime, time, ctime
+from time import time, ctime
 from math import floor
+from style import MESSAGE_STYLE
 
 
 class Message:
@@ -17,12 +18,6 @@ class Message:
     def text_to_show(self):
         text = f'{self.sender} ({self.time}):\n{self.text}'
         label = QLabel(text)
-        label.setStyleSheet('''
-        font-size: 25px;
-        color: black;
-        background-color: #BED6FF;
-        border-style: outset;
-        border-width: 2px;
-        border-radius: 10px;
-        border-color: white''')
+        label.setStyleSheet(MESSAGE_STYLE)
+        label.setFixedSize(label.sizeHint())
         return label

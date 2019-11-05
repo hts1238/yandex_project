@@ -1,0 +1,5 @@
+MAIN_WINDOW_UI = 'main_window.ui'
+DATA = 'data.csv'
+LOGIN_PY = 'main_login.py'
+LOGIN_UI = 'LoginWindow.ui'
+REGISTRATION_UI = 'RegistrationWindow.ui'
