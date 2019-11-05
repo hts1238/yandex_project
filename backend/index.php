@@ -17,7 +17,7 @@
         }
         body > div {
             padding: 10px 30px;
-            margin: 20px 30px;
+            margin: 20px 10px;
             background-color: white;
             display: flex;
             flex-direction: column;
@@ -134,6 +134,16 @@
 
             <p>token : </p>
             <input name="token">
+
+            <button type=submit>Send</button>
+        </form>
+    </div>
+
+    <div>
+        <h1>get_info.php</h1>
+        <form target="_blank" action=get_info.php method=post>
+            <p>handle : </p>
+            <input name="handle">
 
             <button type=submit>Send</button>
         </form>
