@@ -11,18 +11,24 @@ from PyQt5.QtWidgets import QDialog
 
 
 class RegistrationWindow(QDialog):
+    """
+    Класс окна регистрации пользователя
+    """
     def __init__(self):
         super().__init__()
         self.initUI()
 
     def initUI(self):
         uic.loadUi(REGISTRATION_UI, self)
-        self.setFixedSize(650, 700)
         self.setWindowFlags(Qt.WindowMaximizeButtonHint)
         self.ok_btn.clicked.connect(self.run)
         self.password_text.setText(generate_password(15))
 
     def run(self):
+        """
+        Выполняет процесс регистрации пользователя, ели это возможно
+        :return: None
+        """
         email = self.email_text.text()
         name = self.name_text.text()
         handle = self.handle_text.text()

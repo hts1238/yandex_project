@@ -21,9 +21,22 @@ sys.setrecursionlimit(86400)  # Переопределяем предел рек
 
 SYNCHRONIZATION_TIME = 5  # Частота синхнонизации (в секундах)
 
+START_DIALOG_MESSAGE_TEXT = 'Hi'
 
-class MyWidget(QMainWindow):
+
+class MainWindow(QMainWindow):
+    """
+    Класс главног окна.
+    """
+
     def __init__(self, users_handles, users_names, dialogs, handle, token):
+        """
+        :param users_handles: список хэндлов пользователей, с которыми есть переписка
+        :param users_names: словарь <хэндл пользователя>: <имя пользователя>
+        :param dialogs: словарь <хэндл пользователя>: <спосок объектов класса Message (сообщений)>
+        :param handle: хэндл пользователя
+        :param token: токен пользователя
+        """
         super().__init__()
 
         self.handle = handle
@@ -45,6 +58,10 @@ class MyWidget(QMainWindow):
         self.start()
 
     def initUI(self):
+        """
+        Функция отрисовки основного окна
+        :return: None
+        """
         uic.loadUi(MAIN_WINDOW_UI, self)
 
         self.message_send_button.clicked.connect(self.send_message)
@@ -56,6 +73,10 @@ class MyWidget(QMainWindow):
         self.restyle()
 
     def restyle(self):
+        """
+        Фукция установки стилей. Все стили прописываются в файле style.py
+        :return: None
+        """
         self.setStyleSheet(BACKGROUND_STYLE)
         self.message_send_button.setStyleSheet(MESSAGE_SEND_BTN_STYLE)
 
@@ -67,8 +88,6 @@ class MyWidget(QMainWindow):
             self.send_message()
         if event.key() == Qt.Key_Return:
             self.send_message()
-        if event.key() == Qt.Key_1:
-            self.synchronization()
 
     def mouseMoveEvent(self, event):
         if time.time() - self.last_synchronization_time > 1:
@@ -76,15 +95,21 @@ class MyWidget(QMainWindow):
             self.last_synchronization_time = time.time()
 
     def synchronization(self):
+        """
+        Функция сингхронизации. При вызове с сервера получает все диалоги пользователя
+         и сравнивает их с нынешними. При несовпадении обновляет информацию, сортирует спиок
+         юзеров по времени последнего сообщения. Если диалог открыт сейчас,
+         то добавляет новое сообщение
+        :return: None
+        """
         saved_dialogs = copy.deepcopy(self.dialogs)
         something_new, new_senders, new_dialogs = synchronization_server(self.handle,
                                                                          self.token,
                                                                          self.handles_of_users,
                                                                          self.dialogs,
                                                                          self.names_of_users)
-
         if something_new:
-            print('something_new')
+            print('something_new')  # Что-то новое
             if self.user_now and saved_dialogs[self.user_now] != new_dialogs[self.user_now]:
                 for message in new_dialogs[self.user_now]:
                     if message not in saved_dialogs[self.user_now]:
@@ -95,6 +120,10 @@ class MyWidget(QMainWindow):
         # threading.Timer(SYNCHRONIZATION_TIME, self.synchronization).start()
 
     def clear_users(self):
+        """
+        При вызове очищает поле юзеров
+        :return: None
+        """
         self.users_btn = dict()
         while self.senders.count():
             child = self.senders.takeAt(0)
@@ -102,12 +131,21 @@ class MyWidget(QMainWindow):
                 child.widget().deleteLater()
 
     def clear_messages(self):
+        """
+        При вызове очищает поле сообщений
+        :return: None
+        """
         while self.messages.count():
             child = self.messages.takeAt(0)
             if child.widget():
                 child.widget().deleteLater()
 
     def scroll_message_bar(self, n):
+        """
+        Прокручивает поле сообщений до конца
+        :param n: Коллтчество processEvents перед очисткой
+        :return: None
+        """
         for _ in range(n):
             QApplication.processEvents()
         message_vbar = self.messangesScrollArea.verticalScrollBar()
@@ -116,10 +154,20 @@ class MyWidget(QMainWindow):
         # message_vbar.setSliderDown(True)
 
     def scroll_senders_bar(self):
+        """
+        Прокручивает поле юзеров в начало
+        :return: None
+        """
         QApplication.processEvents()
         self.sendersScrollArea.verticalScrollBar().setSliderPosition(0)
 
     def send_message(self):
+        """
+        Отправляет введенное сообщение на сервер,
+         добавляет его в поле сообщений,
+         заносит в диалог с нынешним юзером
+        :return: None
+        """
         if not self.user_now:
             return
 
@@ -128,6 +176,8 @@ class MyWidget(QMainWindow):
             return
 
         text = refactor_message(text)
+
+        self.messange_input.clear()
 
         message = Message(text, self.names_of_users[self.handle])
         self.add_message(message)
@@ -141,11 +191,14 @@ class MyWidget(QMainWindow):
 
         send_message_server(self.handle, self.token, self.user_now, message.text)
 
-        self.messange_input.clear()
-
         self.start()
 
     def add_message(self, message):
+        """
+        Добавляет в поле сообщенией переданное сообщение
+        :param message: объект класса Message
+        :return: None
+        """
         if message.sender == self.names_of_users[self.handle]:
             self.messages.addWidget(message.text_to_show(), self.messages_number, 0,
                                     alignment=Qt.AlignRight)
@@ -158,6 +211,11 @@ class MyWidget(QMainWindow):
         self.scroll_message_bar(2)
 
     def show_new_user(self, user):
+        """
+        Добарляет пользователя по переданному хэндлу в поле юзеров
+        :param user: хэндл пользователя
+        :return: None
+        """
         btn = QPushButton(self.names_of_users[user])
         btn.clicked.connect(self.open_new_dialog)
 
@@ -168,12 +226,15 @@ class MyWidget(QMainWindow):
                           else SENDER_NOW_BACKGROUND_STYLE)
 
         # self.senders.addWidget(btn, self.users_showed, 0, alignment=Qt.AlignVCenter)
-
         self.senders.addWidget(btn)
 
         self.users_btn[btn] = user
 
     def open_new_dialog(self):
+        """
+        Открывает новый диалог, вызов доступен только по нажатию на кнопку юзера из self.users_btn
+        :return: None
+        """
         self.clear_messages()
 
         for btn in self.users_btn.keys():
@@ -195,11 +256,19 @@ class MyWidget(QMainWindow):
         # self.messange_input.setCursorPosition(0)
 
     def sort_users(self):
+        """
+        Сортирует self.handles_of_users по времени последнего сообщения
+        :return: None
+        """
         k = lambda l: -self.dialogs[l][-1].int_time if l in self.dialogs and self.dialogs[l] else 0
         self.handles_of_users.sort(key=k)
         # self.scroll_senders_bar()
 
     def start(self):
+        """
+        Обновляет поле юзеров
+        :return: None
+        """
         self.clear_users()
         self.sort_users()
         for i in range(self.number_of_users):
@@ -207,6 +276,12 @@ class MyWidget(QMainWindow):
         self.scroll_senders_bar()
 
     def start_new_dialog(self):
+        """
+        Открывает поле для ввода хэндла юзера, с которым необходимо начать переписку
+        Если хэндл существует и диалог еще не начет, то открывается диалог и
+        отправляется сообщение START_DIALOG_MESSAGE_TEXT
+        :return: None
+        """
         input_dialog = QInputDialog
         input_dialog.setStyleSheet(self, INPUT_DIALOG_BACKGROUND_STYLE)
         handle, okBtnPressed = QInputDialog.getText(self, 'Новый диалог',
@@ -215,19 +290,34 @@ class MyWidget(QMainWindow):
             if not check_handle(handle):
                 self.handles_of_users.append(handle)
                 self.names_of_users[handle] = get_name_from_handle_server(handle)
-                send_message_server(self.handle, self.token, handle, 'Hi')
+                send_message_server(self.handle, self.token, handle, START_DIALOG_MESSAGE_TEXT)
                 self.synchronization()
 
     def exit_user(self):
+        """
+        Осуществляет выход пользователя из системы
+        (Очищает запомненные данные пользователя)
+        :return: None
+        """
         open(DATA, 'w')
         self.close()
         exit(0)
 
 
 def main(users_handles, users_names, dialogs, handle, token, remember):
+    """
+    Функция запуска главнго окна приложения Messenger
+    :param users_handles: список хэндлов юзеров, с которыми есть переписка
+    :param users_names: словарь <хэндл пользователя>: <имя пользователя>
+    :param dialogs: словарь <хэндл пользователя>: <спосок объектов класса Message (сообщений)>
+    :param handle: хэндл пользователя
+    :param token: токен пользователя
+    :param remember: нужно ли запоминать логин и пароль пользователя для автоматического входа
+    :return: None
+    """
     try:
         app = QApplication(sys.argv)
-        ex = MyWidget(users_handles, users_names, dialogs, handle, token)
+        ex = MainWindow(users_handles, users_names, dialogs, handle, token)
         ex.show()
         sys.exit(app.exec_())
     finally:

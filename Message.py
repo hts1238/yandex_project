@@ -5,7 +5,16 @@ from style import MESSAGE_STYLE
 
 
 class Message:
+    """
+    Класс сообщения
+    """
     def __init__(self, text, sender, int_time=None):
+        """
+        :param text: Текст сообщения
+        :param sender: Отправитель сообщения
+        :param int_time: Время сообщения (с начала эпохи), задается автоматически,
+        вводится только при синхронизации с сервером
+        """
         self.sender = sender
         self.text = text
         self.int_time = int(int_time) if int_time else floor(time())

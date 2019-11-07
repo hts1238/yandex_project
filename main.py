@@ -5,13 +5,15 @@
 █   █ █     █   █ █   █  █ █  █ █   █ █
 █   █ ███ ███ ███ ███ █  █ ████ ███ █ █
 """
-# vova
-# 6HZY2cWus9bG8Dy
 
 from files import *
 
 
 def main():
+    """
+    Функция запуска оконного приложения Messenger
+    :return: None
+    """
     import sys
     import os
     import csv

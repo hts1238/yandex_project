@@ -1,4 +1,12 @@
 def registration_request(email, name, handle, password):
+    """
+    Веполняет регистрацию пользователя через сервер
+    :param email: адрес электронной почты нового пользователя
+    :param name: имя нового пользователя
+    :param handle: хэндл нового пользователя
+    :param password: пароль нового пользователя
+    :return: результат регистрации
+    """
     import requests
     import json
 

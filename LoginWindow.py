@@ -11,13 +11,19 @@ import csv
 
 
 class LoginWindow(QDialog):
+    """
+    Класс окна авторизации
+    """
     def __init__(self):
         super().__init__()
         self.initUI()
 
     def initUI(self):
+        """
+        Отрисовка окна авторизации
+        :return: None
+        """
         uic.loadUi(LOGIN_UI, self)
-        self.setFixedSize(650, 700)
         self.ok_btn.clicked.connect(self.run)
         self.registr_btn.clicked.connect(self.registration)
         self.setWindowFlags(Qt.WindowMaximizeButtonHint)
@@ -31,6 +37,10 @@ class LoginWindow(QDialog):
             self.run()
 
     def run(self):
+        """
+        Выполняется авторизация пользователя по введенным данным
+        :return: None
+        """
         handle = self.handle_text.text()
         password = self.password_text.text()
         if check_handle(handle):
@@ -58,11 +68,22 @@ class LoginWindow(QDialog):
                 self.password_corr.setStyleSheet('color: red')
 
     def registration(self):
+        """
+        Открывается окно регистрации и запускается процесс регистрации
+        :return:
+        """
         self.registration_window = RegistrationWindow()
         self.registration_window.setWindowModality(Qt.ApplicationModal)
         self.registration_window.show()
 
     def save(self, handle, password, token):
+        """
+        Сохранение данных пользователя в файл DATA для дальнейшей работы программы
+        :param handle: хэндл пользователя
+        :param password: пароль пользователя
+        :param token: токен пользователя
+        :return: None
+        """
         with open(DATA, 'w', encoding="utf8") as file:
             writer = csv.writer(file, delimiter=';', quotechar='"', quoting=csv.QUOTE_MINIMAL)
             writer.writerow([handle, password, token, self.remember_btn.isChecked()])

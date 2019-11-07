@@ -1,9 +1,0 @@
-::1 - - [30/Oct/2019:20:21:51 +0500] "GET /backend/login.php HTTP/1.1" 200 64
-::1 - - [30/Oct/2019:20:21:51 +0500] "GET /favicon.ico HTTP/1.1" 404 209
-::1 - - [30/Oct/2019:21:55:06 +0500] "GET / HTTP/1.1" 200 897
-::1 - - [30/Oct/2019:21:55:08 +0500] "GET /favicon.ico HTTP/1.1" 404 209
-::1 - - [30/Oct/2019:21:55:20 +0500] "GET /backend/ HTTP/1.1" 200 600
-::1 - - [30/Oct/2019:21:55:30 +0500] "GET /backend/get_messages.php HTTP/1.1" 200 69
-127.0.0.1 - - [30/Oct/2019:21:56:09 +0500] "POST /backend/get_messages.php HTTP/1.1" 200 29
-::1 - - [30/Oct/2019:21:56:16 +0500] "GET / HTTP/1.1" 200 897
-127.0.0.1 - - [30/Oct/2019:21:57:06 +0500] "POST /backend/get_messages.php HTTP/1.1" 200 29

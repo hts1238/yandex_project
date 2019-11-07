@@ -1,4 +1,12 @@
 def send_message_server(from_handle, token, to_handle, text):
+    """
+    Отправка сообщения на сервер
+    :param from_handle: хэндл пользователя-отправителя
+    :param token: токен пользователя-отправителя
+    :param to_handle: хэндл пользователя-получателя
+    :param text: текст сообщения
+    :return: None
+    """
     import requests
     import json
 

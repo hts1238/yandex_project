@@ -14,6 +14,7 @@ INPUT_DIALOG_BACKGROUND_STYLE = '''
     color: #fff;
     font-size: 25px;
 '''
+
 SENDER_NOW_BACKGROUND_STYLE = '''
     background-color: #557;
     color: #fff;

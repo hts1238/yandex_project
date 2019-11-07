@@ -1,4 +1,9 @@
 def generate_password(m):
+    """
+    Функция генерирования стандартного пароля высокой сложности
+    :param m: длина пароля
+    :return: пароль высокой сложности
+    """
     from random import choice
 
     maybe = []

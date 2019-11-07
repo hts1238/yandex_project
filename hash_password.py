@@ -1,4 +1,9 @@
 def hash_password(password):
+    """
+    Функция хеширует переданный пароль с помощью технологнии bcrypt
+    :param password: пароль, который необходимо хэшировать
+    :return: хэш пароля
+    """
     import bcrypt
 
     password = bytes(password, encoding='utf8')
