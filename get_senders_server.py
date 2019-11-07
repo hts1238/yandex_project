@@ -1,4 +1,10 @@
 def get_senders_server(handle, token):
+    """
+    Функция возвращаяет юзеров, с которыми у пользователя есть переписка
+    :param handle: хэндл пользователя
+    :param token: токен пользователя
+    :return: список юзеров
+    """
     import requests
     import json
 

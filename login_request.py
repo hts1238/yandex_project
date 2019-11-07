@@ -1,4 +1,10 @@
 def login_request(handle, password):
+    """
+    Выполняет авторизацию пользователя
+    :param handle: логин пользователя
+    :param password: пароль пользователя
+    :return: ответ сервера
+    """
     import requests
     import json
 
