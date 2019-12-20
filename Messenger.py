@@ -83,6 +83,14 @@ MESSAGE_SEND_BTN_STYLE = '''
     padding: 6px;
 '''
 
+REGISTRATION_POST_QUERIES_LINK = 'https://messenger.tim-ur.ru/backend/register_user.php'
+LOGIN_POST_QUERIES_LINK = 'https://messenger.tim-ur.ru/backend/login.php'
+CHECK_HANDLE_POST_QUERIES_LINK = 'https://messenger.tim-ur.ru/backend/check_handle.php'
+SEND_MESSAGE_POST_QUERIES_LINK = 'https://messenger.tim-ur.ru/backend/send_message.php'
+GET_MESSAGES_POST_QUERIES_LINK = 'https://messenger.tim-ur.ru/backend/get_messages.php'
+GET_SENDERS_POST_QUERIES_LINK = 'https://messenger.tim-ur.ru/backend/get_message_list.php'
+GET_NAME_FROM_HANDLE_POST_QUERIES_LINK = 'https://messenger.tim-ur.ru/backend/get_info.php'
+
 
 class UiLoginWindow(object):
     def setupUi(self, Dialog):
@@ -611,15 +619,12 @@ class UiMainWindow(object):
 
 def synchronization_server(handle, token, senders, dialogs, names_of_users):
     def get_senders():
-        from get_senders_server import get_senders_server
         return get_senders_server(handle, token)
 
     def get_name_from_handle(handle):
         return names_of_users[handle]
 
     def get_dialog(sender):
-        from get_messages_server import get_messages_server
-        from Message import Message
         return [Message(message[2], get_name_from_handle(message[0]), message[3]) for message in
                 get_messages_server(handle, sender, token)['result']]
 
@@ -647,7 +652,7 @@ def refactor_message(message):
 
 def check_handle(handle):
     data = {'handle': handle}
-    response = requests.post('https://tim-ur.ru/yandex/check_handle.php', data=data)
+    response = requests.post(CHECK_HANDLE_POST_QUERIES_LINK, data=data)
 
     answer = json.loads(response.text)
 
@@ -661,18 +666,15 @@ def check_message(message):
 def send_message_server(from_handle, token, to_handle, text):
     if not text:
         return
-    print(from_handle, token, to_handle, text.rstrip())
     data = {'from_handle': from_handle, 'token': token, 'to_handle': to_handle, 'text': text}
-    response = requests.post('https://tim-ur.ru/yandex/send_message.php', data=data)
+    response = requests.post(SEND_MESSAGE_POST_QUERIES_LINK, data=data)
 
     answer = json.loads(response.text)
-
-    print(answer)
 
 
 def get_name_from_handle_server(handle):
     data = {'handle': handle}
-    response = requests.post('https://tim-ur.ru/yandex/get_info.php', data=data)
+    response = requests.post(GET_NAME_FROM_HANDLE_POST_QUERIES_LINK, data=data)
 
     answer = json.loads(response.text)
 
@@ -681,18 +683,16 @@ def get_name_from_handle_server(handle):
 
 def get_senders_server(handle, token):
     data = {'handle': handle, 'token': token}
-    response = requests.post('https://tim-ur.ru/yandex/get_message_list.php', data=data)
+    response = requests.post(GET_SENDERS_POST_QUERIES_LINK, data=data)
 
     answer = json.loads(response.text)
-
-    print(answer)
 
     return answer.keys() if answer else []
 
 
 def get_messages_server(handle, to_handle, token):
     data = {'handle': handle, 'token': token, 'to_handle': to_handle}
-    response = requests.post('https://tim-ur.ru/yandex/get_messages.php', data=data)
+    response = requests.post(GET_MESSAGES_POST_QUERIES_LINK, data=data)
 
     answer = json.loads(response.text)
 
@@ -701,21 +701,14 @@ def get_messages_server(handle, to_handle, token):
 
 def login_request(handle, password):
     data = {'handle': handle, 'password': password}
-    response = requests.post('https://tim-ur.ru/yandex/login.php', data=data)
+    response = requests.post(LOGIN_POST_QUERIES_LINK, data=data)
 
     answer = json.loads(response.text)
-
-    print(answer)
 
     return answer
 
 
 def generate_password(m):
-    """
-    Функция генерирования стандартного пароля высокой сложности
-    :param m: длина пароля
-    :return: пароль высокой сложности
-    """
     from random import choice
 
     maybe = []
@@ -791,11 +784,9 @@ class Message:
 
 def registration_request(email, name, handle, password):
     data = {'email': email, 'name': name, 'handle': handle, 'password': password}
-    response = requests.post('https://tim-ur.ru/yandex/register_user.php', data=data)
+    response = requests.post(REGISTRATION_POST_QUERIES_LINK, data=data)
 
     answer = json.loads(response.text)
-
-    print(answer)
 
     return answer
 
@@ -837,13 +828,6 @@ def send_email(name, acc_login, acc_password, toAdr):
 
 class MainWindow(QMainWindow, UiMainWindow):
     def __init__(self, users_handles, users_names, dialogs, handle, token):
-        """
-        :param users_handles: список хэндлов пользователей, с которыми есть переписка
-        :param users_names: словарь <хэндл пользователя>: <имя пользователя>
-        :param dialogs: словарь <хэндл пользователя>: <спосок объектов класса Message (сообщений)>
-        :param handle: хэндл пользователя
-        :param token: токен пользователя
-        """
         super().__init__()
 
         self.handle = handle
@@ -901,7 +885,6 @@ class MainWindow(QMainWindow, UiMainWindow):
                                                                          self.dialogs,
                                                                          self.names_of_users)
         if something_new:
-            print('something_new')  # Что-то новое
             if self.user_now and saved_dialogs[self.user_now] != new_dialogs[self.user_now]:
                 for message in new_dialogs[self.user_now]:
                     if message not in saved_dialogs[self.user_now]:
@@ -1069,7 +1052,6 @@ class RegistrationWindow(QDialog, UiRegistrationWindow):
         if 'Error' not in answer:
             send_email(name, handle, password, email)
             self.token = answer['token']
-            print(self.token)
             self.close()
         else:
             self.handle_corr.setText('Incorrect')
@@ -1111,7 +1093,6 @@ class LoginWindow(QDialog, UiLoginWindow):
             self.password_corr.setText('')
         answer = login_request(handle, password)
         if 'Error' not in answer:
-            print(handle, password, answer['token'])
             self.save(handle, password, answer['token'])
             self.close()
         else:
@@ -1128,7 +1109,7 @@ class LoginWindow(QDialog, UiLoginWindow):
         self.registration_window.show()
 
     def save(self, handle, password, token):
-        with open(DATA, 'w', encoding="utf8") as file:
+        with open(DATA, 'w+', encoding="utf8") as file:
             writer = csv.writer(file, delimiter=';', quotechar='"', quoting=csv.QUOTE_MINIMAL)
             writer.writerow([handle, password, token, self.remember_btn.isChecked()])
 
@@ -1153,17 +1134,20 @@ def login_main():
 
 
 def main():
-    with open(DATA, encoding="utf8") as file:
-        reader = list(csv.reader(file, delimiter=';', quotechar='"'))
-        reader = reader[0] if reader else []
-        data = reader
-        if len(data) < 4:
+    try:
+        with open(DATA, encoding="utf8") as file:
+            reader = list(csv.reader(file, delimiter=';', quotechar='"'))
+            reader = reader[0] if reader else []
+            try:
+                login, password, token, remember = reader
+            except ValueError:
+                login, password, token, remember = '', '', '', False
+    except FileNotFoundError:
+        with open(DATA, 'w+', encoding="utf8") as file:
             login = ''
             password = ''
             token = ''
             remember = False
-        else:
-            login, password, token, remember = data
 
     if login and password:
         token = login_request(login, password)['token']
@@ -1175,7 +1159,6 @@ def main():
         reader = list(csv.reader(file, delimiter=';', quotechar='"'))
         reader = reader[0] if reader else []
         data = reader
-        print(data)
         if len(data) < 4:
             exit(228)
         else:

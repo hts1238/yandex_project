@@ -27,17 +27,20 @@ def main():
 
     # sys.path.insert(1, 'C:/Program Files (x86)/Messenger/')
 
-    with open(DATA, encoding="utf8") as file:
-        reader = list(csv.reader(file, delimiter=';', quotechar='"'))
-        reader = reader[0] if reader else []
-        data = reader
-        if len(data) < 4:
+    try:
+        with open(DATA, encoding="utf8") as file:
+            reader = list(csv.reader(file, delimiter=';', quotechar='"'))
+            reader = reader[0] if reader else []
+            try:
+                login, password, token, remember = reader
+            except ValueError:
+                login, password, token, remember = '', '', '', False
+    except FileNotFoundError:
+        with open(DATA, 'w+', encoding="utf8") as file:
             login = ''
             password = ''
             token = ''
             remember = False
-        else:
-            login, password, token, remember = data
 
     if login and password:
         token = login_request(login, password)['token']
