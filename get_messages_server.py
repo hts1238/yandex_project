@@ -8,9 +8,10 @@ def get_messages_server(handle, to_handle, token):
     """
     import requests
     import json
+    from links import GET_MESSAGES_POST_QUERIES_LINK
 
     data = {'handle': handle, 'token': token, 'to_handle': to_handle}
-    response = requests.post('https://tim-ur.ru/yandex/get_messages.php', data=data)
+    response = requests.post(GET_MESSAGES_POST_QUERIES_LINK, data=data)
 
     answer = json.loads(response.text)
 

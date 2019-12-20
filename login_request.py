@@ -7,9 +7,10 @@ def login_request(handle, password):
     """
     import requests
     import json
+    from links import LOGIN_POST_QUERIES_LINK
 
     data = {'handle': handle, 'password': password}
-    response = requests.post('https://tim-ur.ru/yandex/login.php', data=data)
+    response = requests.post(LOGIN_POST_QUERIES_LINK, data=data)
 
     answer = json.loads(response.text)
 

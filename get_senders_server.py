@@ -7,9 +7,10 @@ def get_senders_server(handle, token):
     """
     import requests
     import json
+    from links import GET_SENDERS_POST_QUERIES_LINK
 
     data = {'handle': handle, 'token': token}
-    response = requests.post('https://tim-ur.ru/yandex/get_message_list.php', data=data)
+    response = requests.post(GET_SENDERS_POST_QUERIES_LINK, data=data)
 
     answer = json.loads(response.text)
 

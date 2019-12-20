@@ -6,9 +6,10 @@ def check_handle(handle):
     """
     import requests
     import json
+    from links import CHECK_HANDLE_POST_QUERIES_LINK
 
     data = {'handle': handle}
-    response = requests.post('https://tim-ur.ru/yandex/check_handle.php', data=data)
+    response = requests.post(CHECK_HANDLE_POST_QUERIES_LINK, data=data)
 
     answer = json.loads(response.text)
 

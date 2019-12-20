@@ -1,7 +1,3 @@
-import imaplib
-import smtplib
-
-
 def send_email(name, acc_login, acc_password, toAdr):
     """
     Выполняет отправку сообщения о регистрации
@@ -11,6 +7,8 @@ def send_email(name, acc_login, acc_password, toAdr):
     :param toAdr: адрес электронной почты пользователя
     :return: None
     """
+    import imaplib
+    import smtplib
     login = 'yourmesseger@yandex.ru'
     password = 'passwordforyandex111'
     server = 'imap.yandex.ru'
